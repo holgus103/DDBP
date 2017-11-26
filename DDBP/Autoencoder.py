@@ -82,9 +82,11 @@ class Autoencoder:
                 net = self.buildPretrainNet(i, input);
                 lossFunction = self.loss(net[len(net) - 1], input);
                 optimizer = tf.train.RMSPropOptimizer(learningRate).minimize(lossFunction);
-                session.run(init);
-                session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
+                #session.run(init);
+                #session.run(tf.initialize_variables(self.getVariablesToInit(i)));    
+                init_op = tf.initialize_all_variables()
                 for i in range(1, it):
+                        session.run(init_op)
                         session.run([optimizer, lossFunction], feed_dict={input : data});
 
 
