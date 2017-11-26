@@ -77,11 +77,11 @@ class Autoencoder:
         for i in range(0, len(self.layerCounts)):
             #with tf.Graph().as_default() as g:
             with tf.Session() as session:
-                init = tf.global_variables_initializer();
                 input = tf.placeholder("float", [None, self.inputCount]);
                 net = self.buildPretrainNet(i, input);
                 lossFunction = self.loss(net[len(net) - 1], input);
                 optimizer = tf.train.RMSPropOptimizer(learningRate).minimize(lossFunction);
+                init = tf.global_variables_initializer();
                 session.run(init);
                 session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
                 for i in range(1, it):
