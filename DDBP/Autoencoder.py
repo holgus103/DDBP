@@ -22,13 +22,13 @@ class Autoencoder:
             b = tf.Variable(tf.random_normal([currCount]), trainable = True, name='v_B{0}'.format(currCount));
             self.weights.append(w);
             self.biases.append(b);
-            w_f = tf.Variable(tf.random_normal([prevCount, currCount]), trainable = False, name='f_W{0}'.format(currCount));
-            b_f = tf.Variable(tf.random_normal([currCount]), trainable = False, name='f_B{0}'.format(currCount));
+            w_f = tf.Variable(tf.identity(w), trainable = False, name='f_W{0}'.format(currCount));
+            b_f = tf.Variable(tf.identity(b), trainable = False, name='f_B{0}'.format(currCount));
             self.fixedWeights.append(w_f);
             self.fixedBiases.append(b_f);
             
             b_out = tf.Variable(tf.random_normal([prevCount]), trainable = True, name='v_B_out{0}'.format(currCount));
-            b_out_fixed = tf.Variable(tf.random_normal([prevCount]), trainable = False, name='f_B_out{0}'.format(currCount));
+            b_out_fixed = tf.Variable(tf.identity(b_out), trainable = False, name='f_B_out{0}'.format(currCount));
             self.outBiases.append(b_out);
             self.outBiasesFixed.append(b_out_fixed);
             #self.layers.append(tf.nn.sigmoid(tf.add(tf.matmul(input, w), b)));
@@ -85,7 +85,7 @@ class Autoencoder:
                 session.run(init);
                 session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
                 for i in range(1, it):
-                        session.run([optimizer, lossFunction], feed_dict={input : data});
+                        _, loss = session.run([optimizer, lossFunction], feed_dict={input : data});
 
 
             
