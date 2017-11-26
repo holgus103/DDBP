@@ -1,5 +1,4 @@
-
-import tensorflow as tf
+import tensorflow as tf;
 # based on: https://github.com/aymericdamien/TensorFlow-Examples/blob/master/examples/3_NeuralNetworks/autoencoder.py
 class Autoencoder:
     def mseLoss(pred, actual):
@@ -19,23 +18,24 @@ class Autoencoder:
         return tf.nn.sigmoid(tf.add(tf.matmul(input, self.weights[index], transpose_b = isDecoder), self.biases[index]));
 
     def createWeights(self, prevCount, currCount):
-            w = tf.Variable(tf.random_normal([prevCount, currCount]), trainable = True);
-            b = tf.Variable(tf.random_normal([currCount]), trainable = True);
+            w = tf.Variable(tf.random_normal([prevCount, currCount]), trainable = True, name='v_W{0}'.format(currCount));
+            b = tf.Variable(tf.random_normal([currCount]), trainable = True, name='v_B{0}'.format(currCount));
             self.weights.append(w);
             self.biases.append(b);
-            w_f = tf.Variable(tf.random_normal([prevCount, currCount]), trainable = False);
-            b_f = tf.Variable(tf.random_normal([currCount]), trainable = False);
+            w_f = tf.Variable(tf.random_normal([prevCount, currCount]), trainable = False, name='f_W{0}'.format(currCount));
+            b_f = tf.Variable(tf.random_normal([currCount]), trainable = False, name='f_B{0}'.format(currCount));
             self.fixedWeights.append(w_f);
             self.fixedBiases.append(b_f);
             
-            b_out = tf.Variable(tf.random_normal([prevCount]), trainable = True);
-            b_out_fixed = tf.Variable(tf.random_normal([prevCount]), trainable = False);
+            b_out = tf.Variable(tf.random_normal([prevCount]), trainable = True, name='v_B_out{0}'.format(currCount));
+            b_out_fixed = tf.Variable(tf.random_normal([prevCount]), trainable = False, name='f_B_out{0}'.format(currCount));
             self.outBiases.append(b_out);
             self.outBiasesFixed.append(b_out_fixed);
             #self.layers.append(tf.nn.sigmoid(tf.add(tf.matmul(input, w), b)));
 
     def __init__(self, inputCount, layerCounts, loss):
         self.loss = loss;
+        self.inputCount = inputCount;
         self.layerCounts = layerCounts;
         self.weights = [];   
         self.biases = [];
@@ -44,7 +44,6 @@ class Autoencoder:
         #self.layers = [];
         self.fixedWeights = [];
         self.fixedBiases = []
-        self.input = tf.placeholder("float", [None, inputCount]);
         l = len(layerCounts);
         
         self.createWeights(inputCount, layerCounts[0]);
@@ -62,28 +61,39 @@ class Autoencoder:
 
 
 
+    def getVariablesToInit(self, n):
+        vars = [self.weights[n], self.biases[n]]
 
+        vars.append(self.outBiases[n]);
+
+        if 0<n:
+            vars.append(self.fixedBiases[n-1]);
+            vars.append(self.fixedWeights[n-1]);
+            vars.append(self.outBiasesFixed[n-1]);
+        return vars;
 
     
-    def pretrain(self, learningRate):
-        init = tf.global_variables_initializer();
-
+    def pretrain(self, learningRate, it, data):
         for i in range(0, len(self.layerCounts)):
-            net = self.buildPretrainNet(i);
-            #lossFunction = self.loss(net[len(net) - 1], self.input);
-            #optimizer = tf.train.RMSPropOptimizer(learningRate).minimize(lossFunction);
-            #with tf.Session() as session:
-            #     sess.run(init);         
-            #     for i in range(1, it):
-            #         sess.run([optimizer, lossFunction], feed_dict={self.input : data});
+            #with tf.Graph().as_default() as g:
+            with tf.Session() as session:
+                init = tf.global_variables_initializer();
+                input = tf.placeholder("float", [None, self.inputCount]);
+                net = self.buildPretrainNet(i, input);
+                lossFunction = self.loss(net[len(net) - 1], input);
+                optimizer = tf.train.RMSPropOptimizer(learningRate).minimize(lossFunction);
+                session.run(init);
+                session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
+                for i in range(1, it):
+                        session.run([optimizer, lossFunction], feed_dict={input : data});
 
 
             
 
-    def buildPretrainNet(self, n):
+    def buildPretrainNet(self, n, input):
         
         layers = [];
-        inp = self.input;
+        inp = input;
         for i in range(0, n):
             inp = self.createLayer(i, inp, isFixed = True);
             layers.append(inp);
