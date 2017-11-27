@@ -9,7 +9,7 @@ class Autoencoder:
         return -tf.reduce_mean(tf.reduce_sum(crossEntropy, 1));
 
     @property
-    def session(self)
+    def session(self):
         return self.__session;
 
     def createLayer(self, index, input, isFixed = False, isDecoder = False):
@@ -74,25 +74,25 @@ class Autoencoder:
 
      
     def pretrain(self, learningRate, it, data):
-        self.session = tf.Session();
+        self.__session = tf.Session();
+        init = tf.global_variables_initializer();
+        self.session.run(init);
+        for i in range(0, len(self.layerCounts)):
+            #with tf.Graph().as_default() as g:
+            input = tf.placeholder("float", [len(data), self.inputCount]);
+            net = self.buildPretrainNet(i, input);
+            lossFunction = self.loss(net[len(net) - 1], input);
+            optimizer = tf.train.GradientDescentOptimizer(learningRate).minimize(lossFunction);
 
-            for i in range(0, len(self.layerCounts)):
-                #with tf.Graph().as_default() as g:
-                    input = tf.placeholder("float", [None, self.inputCount]);
-                    net = self.buildPretrainNet(i, input);
-                    lossFunction = self.loss(net[len(net) - 1], input);
-                    optimizer = tf.train.RMSPropOptimizer(learningRate).minimize(lossFunction);
-                    init = tf.global_variables_initializer();
-                    session.run(init);
-                    session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
-                    for i in range(1, it):
-                            _, loss = session.run([optimizer, lossFunction], feed_dict={input : data});
+            self.session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
+            for i in range(1, it):
+                    _, loss = self.session.run([optimizer, lossFunction], feed_dict={input : data});
             
     def buildCompleteNet(self, input):
         net = [];
         inp = input;
         for i in range(0, len(self.weights)):
-            inp = self.createLayer(i, input);
+            inp = self.createLayer(i, inp);
             net.append(inp);
             
         return net;
