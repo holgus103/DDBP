@@ -83,10 +83,16 @@ class Autoencoder:
             net = self.buildPretrainNet(i, input);
             lossFunction = self.loss(net[len(net) - 1], input);
             optimizer = tf.train.GradientDescentOptimizer(learningRate).minimize(lossFunction);
-
+            loss_summary = tf.summary.scalar("loss", lossFunction);
+            weights_summary = tf.summary.histogram("weights", self.weights[i]);
+            biases_summary = tf.summary.histogram("biases", self.biases[i]);
+            summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary])
+            writer = tf.summary.FileWriter('./graphs/pretraining_{0}'.format(i), graph=self.session.graph_def)
             self.session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
-            for i in range(1, it):
-                    _, loss = self.session.run([optimizer, lossFunction], feed_dict={input : data});
+            for j in range(1, it):
+                    _, summary = self.session.run([optimizer, summary_op], feed_dict={input : data});
+                    if j % 100 == 0:
+                        writer.add_summary(summary, j);
             
     def buildCompleteNet(self, input):
         net = [];
