@@ -34,4 +34,7 @@ def processPlayer(cards):
              v[dict[i]] = 1;
 
         p.append(v);
+    # suits: Spades, Hearts, Diamonds, Clubs
+    # contracts: None, Spades, earts, Diamonds, Clubs
+    # east, north, west, south
     return numpy.concatenate(tuple(p));
