@@ -26,6 +26,8 @@ def Parse(input):
 
     for c in t[1]:
         arr = numpy.repeat(0, 14);
+        if c=="\n":
+            continue
         arr[dict[c]] = 1;
         outputs.append(arr);
 
@@ -73,3 +75,18 @@ def processPlayer(cards):
     # contracts: None, Spades, earts, Diamonds, Clubs
     # east, north, west, south
     return numpy.concatenate(tuple(p));
+
+def ReadFile(path, linesCount):
+    dataSet = []
+    outputsSet = []
+    lineNumber = 1
+    with open(path, "r") as file:
+        for line in file:
+            if lineNumber > linesCount:
+                break
+            print(line)
+            data, outputs = Parse(line);
+            dataSet.append(data)
+            outputsSet.append(outputs);
+            lineNumber = lineNumber + 1
+    return (dataSet, outputsSet)
