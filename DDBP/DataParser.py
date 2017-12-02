@@ -84,9 +84,9 @@ def ReadFile(path, linesCount):
         for line in file:
             if lineNumber > linesCount:
                 break
-            print(line)
+            #print(line)
             data, outputs = Parse(line);
-            dataSet.append(data)
-            outputsSet.append(outputs);
+            dataSet = dataSet + data;
+            outputsSet = outputsSet + outputs;
             lineNumber = lineNumber + 1
     return (dataSet, outputsSet)

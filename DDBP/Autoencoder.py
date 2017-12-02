@@ -5,7 +5,9 @@ class Autoencoder:
         return tf.reduce_mean(tf.pow(actual - pred, 2));
 
     def crossEntropyLoss(pred, actual):
-        crossEntropy = tf.add(tf.multiply(tf.log(pred), actual), tf.multiply(tf.log(1 - pred), 1 - actual));
+        p = tf.convert_to_tensor(pred);
+        a = tf.convert_to_tensor(actual);
+        crossEntropy = tf.add(tf.multiply(tf.log(p), a), tf.multiply(tf.log(1 - p), 1 - a));
         return -tf.reduce_mean(tf.reduce_sum(crossEntropy, 1));
 
     @property
@@ -86,10 +88,10 @@ class Autoencoder:
             loss_summary = tf.summary.scalar("loss", lossFunction);
             weights_summary = tf.summary.histogram("weights", self.weights[i]);
             biases_summary = tf.summary.histogram("biases", self.biases[i]);
-            summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary])
-            writer = tf.summary.FileWriter('./graphs/pretraining_{0}'.format(i), graph=self.session.graph_def)
+            summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary]);
+            writer = tf.summary.FileWriter('./graphs/pretraining_{0}'.format(i), graph=self.session.graph_def, flush_secs = 10000);
             self.session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
-            for j in range(1, it):
+            for j in range(1, it[i]):
                     _, summary = self.session.run([optimizer, summary_op], feed_dict={input : data});
                     if j % 100 == 0:
                         writer.add_summary(summary, j);
