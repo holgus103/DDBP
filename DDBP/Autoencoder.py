@@ -8,6 +8,10 @@ class Autoencoder:
         crossEntropy = tf.add(tf.multiply(tf.log(pred), actual), tf.multiply(tf.log(1 - pred), 1 - actual));
         return -tf.reduce_mean(tf.reduce_sum(crossEntropy, 1));
 
+    @property
+    def session(self):
+        return self.__session;
+
     def createLayer(self, index, input, isFixed = False, isDecoder = False):
         if isFixed:
             if isDecoder:
@@ -22,13 +26,13 @@ class Autoencoder:
             b = tf.Variable(tf.random_normal([currCount]), trainable = True, name='v_B{0}'.format(currCount));
             self.weights.append(w);
             self.biases.append(b);
-            w_f = tf.Variable(tf.random_normal([prevCount, currCount]), trainable = False, name='f_W{0}'.format(currCount));
-            b_f = tf.Variable(tf.random_normal([currCount]), trainable = False, name='f_B{0}'.format(currCount));
+            w_f = tf.Variable(tf.identity(w), trainable = False, name='f_W{0}'.format(currCount));
+            b_f = tf.Variable(tf.identity(b), trainable = False, name='f_B{0}'.format(currCount));
             self.fixedWeights.append(w_f);
             self.fixedBiases.append(b_f);
             
             b_out = tf.Variable(tf.random_normal([prevCount]), trainable = True, name='v_B_out{0}'.format(currCount));
-            b_out_fixed = tf.Variable(tf.random_normal([prevCount]), trainable = False, name='f_B_out{0}'.format(currCount));
+            b_out_fixed = tf.Variable(tf.identity(b_out), trainable = False, name='f_B_out{0}'.format(currCount));
             self.outBiases.append(b_out);
             self.outBiasesFixed.append(b_out_fixed);
             #self.layers.append(tf.nn.sigmoid(tf.add(tf.matmul(input, w), b)));
@@ -57,10 +61,6 @@ class Autoencoder:
         # add output layer
         #self.createWeights(layerCounts[0], inputCount);
 
-    #def train(data, desiredOutput, learningRate, it, batchsize,):
-
-
-
     def getVariablesToInit(self, n):
         vars = [self.weights[n], self.biases[n]]
 
@@ -72,24 +72,38 @@ class Autoencoder:
             vars.append(self.outBiasesFixed[n-1]);
         return vars;
 
-    
+     
     def pretrain(self, learningRate, it, data):
+        self.__session = tf.Session();
+        init = tf.global_variables_initializer();
+        self.session.run(init);
         for i in range(0, len(self.layerCounts)):
             #with tf.Graph().as_default() as g:
-            with tf.Session() as session:
-                input = tf.placeholder("float", [None, self.inputCount]);
-                net = self.buildPretrainNet(i, input);
-                lossFunction = self.loss(net[len(net) - 1], input);
-                optimizer = tf.train.RMSPropOptimizer(learningRate).minimize(lossFunction);
-                init = tf.global_variables_initializer();
-                session.run(init);
-                session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
-                for i in range(1, it):
-                        session.run([optimizer, lossFunction], feed_dict={input : data});
-
-
+            input = tf.placeholder("float", [len(data), self.inputCount]);
+            net = self.buildPretrainNet(i, input);
+            lossFunction = self.loss(net[len(net) - 1], input);
+            optimizer = tf.train.GradientDescentOptimizer(learningRate).minimize(lossFunction);
+            loss_summary = tf.summary.scalar("loss", lossFunction);
+            weights_summary = tf.summary.histogram("weights", self.weights[i]);
+            biases_summary = tf.summary.histogram("biases", self.biases[i]);
+            summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary])
+            writer = tf.summary.FileWriter('./graphs/pretraining_{0}'.format(i), graph=self.session.graph_def)
+            self.session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
+            for j in range(1, it):
+                    _, summary = self.session.run([optimizer, summary_op], feed_dict={input : data});
+                    if j % 100 == 0:
+                        writer.add_summary(summary, j);
             
+    def buildCompleteNet(self, input):
+        net = [];
+        inp = input;
+        for i in range(0, len(self.weights)):
+            inp = self.createLayer(i, inp);
+            net.append(inp);
+            
+        return net;
 
+    
     def buildPretrainNet(self, n, input):
         
         layers = [];

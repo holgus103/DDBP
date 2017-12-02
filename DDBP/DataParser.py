@@ -2,9 +2,44 @@ import re
 import numpy
 
 def Parse(input):
-    vals = input.split(" ");    
-    # TODO: Parse desired output
-    return numpy.concatenate((processPlayer(vals[0]), processPlayer(vals[1]), processPlayer(vals[2]), processPlayer(vals[3])));
+    # mapping for chars in value string
+    dict = {
+        '0' : 0, 
+        '1' : 1, 
+        '2' : 2, 
+        '3' : 3, 
+        '4' : 4, 
+        '5' : 5, 
+        '6' : 6, 
+        '7' : 7, 
+        '8' : 8, 
+        '9' : 9, 
+        'A' : 10, 
+        'B' : 11, 
+        'C' : 12, 
+        'D' : 13, 
+    }
+    t = input.split(":");
+    data = [];
+    outputs = [];
+    vals = t[0].split(" ");    
+
+    for c in t[1]:
+        arr = numpy.repeat(0, 14);
+        arr[dict[c]] = 1;
+        outputs.append(arr);
+
+    players = numpy.concatenate((processPlayer(vals[0]), processPlayer(vals[1]), processPlayer(vals[2]), processPlayer(vals[3])));
+    for suit in range(0, 5):
+        for vista in range(0,4):
+            suit_arr = numpy.repeat(0, 5);
+            vista_arr = numpy.repeat(0, 4);
+            suit_arr[suit] = 1;
+            vista_arr[vista] = 1;
+            data.append(numpy.concatenate((suit_arr, vista_arr, players)));
+    return (data, outputs);
+
+    
 
 def processPlayer(cards):
     c = cards.split(".");
@@ -34,4 +69,7 @@ def processPlayer(cards):
              v[dict[i]] = 1;
 
         p.append(v);
+    # suits: Spades, Hearts, Diamonds, Clubs
+    # contracts: None, Spades, earts, Diamonds, Clubs
+    # east, north, west, south
     return numpy.concatenate(tuple(p));

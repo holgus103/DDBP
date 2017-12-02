@@ -24,6 +24,9 @@
     <Compile Include="Autoencoder.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Classifier.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DataParser.py">
       <SubType>Code</SubType>
     </Compile>
