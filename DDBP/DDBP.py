@@ -6,19 +6,20 @@ import tensorflow as tf
 import time
 
 
-it = [10000, 10000, 10000, 1000];
+it = [1000, 1000, 1000, 1000];
 learningRate = 0.01;
-fileLinesCount = 3
+fileLinesCount = 10000
 start = time.time()
 data, outputs = DataParser.ReadFile("sol100000.txt", fileLinesCount)
 end = time.time()
 print("Total time elapsed: " + str((end - start) * 1000) + " miliseconds with " + str(fileLinesCount) + " lines of file" )
 
-#dataSet, outputSet = DataParser.ReadFile("sol100000.txt", 3)
-#data, outputs = DataParser.Parse("AKQT6.3.J876.T43 J875.AJT87.T9.Q6 9.964.AKQ32.K875 432.KQ52.54.AJ92:75755454989842427575");
 
-a = Autoencoder.Autoencoder(217, [104, 52, 26, 13], Autoencoder.Autoencoder.mseLoss);
+a = Autoencoder.Autoencoder(217, [104, 52, 26, 13], Autoencoder.Autoencoder.crossEntropyLoss);
 
 a.pretrain(learningRate, it, data);
 c = Classifier.Classifier(a, 14);
 c.train(data, outputs, learningRate, 10000);
+
+#config = tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1, \
+#                        allow_soft_placement=True, device_count = {'CPU': 1})

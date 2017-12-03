@@ -1,8 +1,8 @@
 # DDBP
 
 ### TODO
-- [ ] K-fold Cross Validation
+~~- [ ] K-fold Cross Validation~~
 - [ ] RMS-optimizer
 - [ ] Adam-optimizer
-- [ ] Cross-entropy issue (the function returns NaN)
+- [x] Cross-entropy issue
 - [ ] Model serialization
