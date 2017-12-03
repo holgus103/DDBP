@@ -72,7 +72,7 @@ def processPlayer(cards):
 
         p.append(v);
     # suits: Spades, Hearts, Diamonds, Clubs
-    # contracts: None, Spades, earts, Diamonds, Clubs
+    # contracts: None, Spades, Hearts, Diamonds, Clubs
     # east, north, west, south
     return numpy.concatenate(tuple(p));
 
@@ -84,9 +84,20 @@ def ReadFile(path, linesCount):
         for line in file:
             if lineNumber > linesCount:
                 break
-            print(line)
+            #print(line)
             data, outputs = Parse(line);
             dataSet.append(data)
             outputsSet.append(outputs);
             lineNumber = lineNumber + 1
-    return (dataSet, outputsSet)
+    return combineDataSets(dataSet, outputsSet)
+
+def combineDataSets(dataSets, outputSets):
+    data = []
+    outputs = []
+    for i in range(0, len(dataSets)):
+        dataSet = dataSets[i]
+        outputSet = outputSets[i]
+        for j in range(0, len(dataSet)):
+            data.append(dataSet[j])
+            outputs.append(outputSet[j])
+    return  (data, outputs)
