@@ -15,7 +15,7 @@ class Classifier:
 
     def train(self, data, desiredOutput, learningRate, it):
         loss = tf.reduce_mean(tf.pow(self.layer - self.outputPlaceholder, 2));
-        optimizer = tf.train.GradientDescentOptimizer(learningRate).minimize(loss);
+        optimizer = tf.train.AdamOptimizer(learningRate).minimize(loss);
         self.autoencoder.session.run(tf.initialize_variables([self.weights, self.biases]));
 
         hist_summaries = [(self.autoencoder.weights[i], 'weights{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))];

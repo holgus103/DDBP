@@ -86,8 +86,8 @@ def ReadFile(path, linesCount):
                 break
             #print(line)
             data, outputs = Parse(line);
-            dataSet.append(data)
-            outputsSet.append(outputs);
+            dataSet = dataSet + data;
+            outputsSet = outputsSet + outputs;
             lineNumber = lineNumber + 1
     return combineDataSets(dataSet, outputsSet)
 
