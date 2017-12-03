@@ -10,7 +10,7 @@ it = [10000, 10000, 10000, 1000];
 learningRate = 0.01;
 fileLinesCount = 3
 start = time.time()
-data, outputs = DataParser.ReadFile("D:\\OneDrive\\Uczelnia\\MiNI\\9 semestr\\Sieci neuronowe\\Projekty\\Brydż\\DDBP\\DDBP\\sol100000.txt", fileLinesCount)
+data, outputs = DataParser.ReadFile("sol100000.txt", fileLinesCount)
 end = time.time()
 print("Total time elapsed: " + str((end - start) * 1000) + " miliseconds with " + str(fileLinesCount) + " lines of file" )
 
