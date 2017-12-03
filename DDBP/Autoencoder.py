@@ -7,7 +7,7 @@ class Autoencoder:
     def crossEntropyLoss(pred, actual):
         p = tf.convert_to_tensor(pred);
         a = tf.convert_to_tensor(actual);
-        crossEntropy = tf.add(tf.multiply(tf.log(p), a), tf.multiply(tf.log(1 - p), 1 - a));
+        crossEntropy = tf.add(tf.multiply(tf.log(p + 1e-10), a), tf.multiply(tf.log(1 - p + 1e-10), 1 - a));
         return -tf.reduce_mean(tf.reduce_sum(crossEntropy, 1));
 
     @property
