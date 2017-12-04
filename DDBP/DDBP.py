@@ -6,9 +6,9 @@ import tensorflow as tf
 import time
 
 
-it = [10, 10, 10, 10];
+it = [1000, 1000, 1000, 1000];
 learningRate = 0.01;
-fileLinesCount = 10;
+fileLinesCount = 1000;
 start = time.time()
 data, outputs = DataParser.ReadFile("sol100000.txt", fileLinesCount)
 end = time.time()
@@ -17,9 +17,8 @@ print("Total time elapsed: " + str((end - start) * 1000) + " miliseconds with " 
 
 a = Autoencoder.Autoencoder(217, [104, 52, 26, 13], Autoencoder.Autoencoder.crossEntropyLoss);
 
-a.pretrain(learningRate, it, data);
+a.pretrain(learningRate, 0, data, 1.0);
 c = Classifier.Classifier(a, 14);
-c.train(data, outputs, learningRate, 100);
+c.train(data, outputs, learningRate, 1000);
 c.test(data, outputs);
-#config = tf.ConfigProto(intra_op_parallelism_threads=1, inter_op_parallelism_threads=1, \
-#                        allow_soft_placement=True, device_count = {'CPU': 1})
+

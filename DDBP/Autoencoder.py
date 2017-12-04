@@ -75,9 +75,12 @@ class Autoencoder:
             vars.append(self.outBiasesFixed[n-1]);
         return vars;
 
+    def prepare_session(self):
+        config = tf.ConfigProto(inter_op_parallelism_threads=4,intra_op_parallelism_threads=4);
+        self.__session = tf.Session(config=config);
      
-    def pretrain(self, learningRate, it, data):
-        self.__session = tf.Session();
+    def pretrain(self, learningRate, it, data, ep):
+        self.prepare_session()
         init = tf.global_variables_initializer();
         self.session.run(init);
         for i in range(0, len(self.layerCounts)):
@@ -96,10 +99,24 @@ class Autoencoder:
             summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary]);
             writer = tf.summary.FileWriter('./graphs/pretraining_{0}'.format(i), graph=self.session.graph, flush_secs = 10000);
             
-            for j in range(1, it[i]):
-                    _, summary = self.session.run([optimizer, summary_op], feed_dict={input : data});
+            if(it > 0):
+                for j in range(1, it[i]):
+                        _, summary = self.session.run([optimizer, summary_op], feed_dict={input : data});
+                        if j % 100 == 0:
+                            print("pretraining {0} - it {1}".format(i, j));
+                            writer.add_summary(summary, j);
+            else:
+                j = 0;
+                while True:
+                    _, summary, lval = self.session.run([optimizer, summary_op, loss_function], feed_dict={input : data});
                     if j % 100 == 0:
+                        print("pretraining {0} - it {1} - lval {2}".format(i, j, lval));
                         writer.add_summary(summary, j);
+                    j = j + 1;
+                    if(lval < ep):
+                        break;
+            
+
             
     def buildCompleteNet(self, input):
         net = [];

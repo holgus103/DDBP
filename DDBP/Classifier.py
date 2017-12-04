@@ -18,7 +18,7 @@ class Classifier:
 
     def train(self, data, desiredOutput, learningRate, it):
         loss = tf.reduce_mean(tf.pow(self.layer - self.outputPlaceholder, 2));
-        opt = tf.train.AdamOptimizer(learningRate);
+        opt = tf.train.RMSPropOptimizer(learningRate);
         optimizer = opt.minimize(loss);
         self.autoencoder.session.run(tf.variables_initializer([self.weights, self.biases]));
         slot_vars = [self.weights, self.biases] + self.autoencoder.biases + self.autoencoder.weights;
@@ -33,6 +33,7 @@ class Classifier:
         for i in range(0, it):
             _, summary = self.autoencoder.session.run([optimizer, summary_op], feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
             if i % 100 == 0:
+                #print("finetuning - it {0}".format(i));
                 writer.add_summary(summary, i);
 
     def test(self, data, desiredOutput):
