@@ -1,5 +1,6 @@
 import re
 import numpy
+import tensorflow as tf;
 
 def Parse(input):
     # mapping for chars in value string
@@ -103,3 +104,19 @@ def combineDataSets(dataSets, outputSets):
             data.append(dataSet[j])
             outputs.append(outputSet[j])
     return  (data, outputs)
+
+def save_as_tfrecord(data, output, name):
+
+    writer = tf.python_io.TFRecordWriter(name);
+    for i in range(0, len(data)):
+        inp = tf.train.Feature(float_list=tf.train.FloatList(value=data[i]));
+        label = tf.train.Feature(float_list=tf.train.FloatList(value=output[i]));
+        feature = {};
+        feature['data'] = inp;
+        feature['label'] = label;
+
+        example = tf.train.Example(features=tf.train.Features(feature=feature));
+        writer.write(example.SerializeToString());
+    
+    writer.close();
+        
