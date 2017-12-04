@@ -34,6 +34,9 @@
     <Compile Include="DDBP.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Tools.py">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.6" />

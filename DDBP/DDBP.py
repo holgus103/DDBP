@@ -8,7 +8,7 @@ import time
 
 it = [1000, 1000, 1000, 1000];
 learningRate = 0.01;
-fileLinesCount = 10000
+fileLinesCount = 10000;
 start = time.time()
 data, outputs = DataParser.ReadFile("sol100000.txt", fileLinesCount)
 end = time.time()

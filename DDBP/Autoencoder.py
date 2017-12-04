@@ -1,4 +1,5 @@
 import tensorflow as tf;
+import Tools
 # based on: https://github.com/aymericdamien/TensorFlow-Examples/blob/master/examples/3_NeuralNetworks/autoencoder.py
 class Autoencoder:
     def mseLoss(pred, actual):
@@ -84,13 +85,17 @@ class Autoencoder:
             input = tf.placeholder("float", [len(data), self.inputCount]);
             net = self.buildPretrainNet(i, input);
             lossFunction = self.loss(net[len(net) - 1], input);
-            optimizer = tf.train.GradientDescentOptimizer(learningRate).minimize(lossFunction);
+            opt = tf.train.AdamOptimizer(learningRate);
+            optimizer = opt.minimize(lossFunction);    
+            vars = self.getVariablesToInit(i);
+            self.session.run(tf.initialize_variables(vars));  
+            self.session.run(Tools.initializeOptimizer(opt, vars));
             loss_summary = tf.summary.scalar("loss", lossFunction);
             weights_summary = tf.summary.histogram("weights", self.weights[i]);
             biases_summary = tf.summary.histogram("biases", self.biases[i]);
             summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary]);
             writer = tf.summary.FileWriter('./graphs/pretraining_{0}'.format(i), graph=self.session.graph_def, flush_secs = 10000);
-            self.session.run(tf.initialize_variables(self.getVariablesToInit(i)));         
+            
             for j in range(1, it[i]):
                     _, summary = self.session.run([optimizer, summary_op], feed_dict={input : data});
                     if j % 100 == 0:
