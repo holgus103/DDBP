@@ -7,4 +7,4 @@
 - [x] Adam-optimizer
 - [x] Cross-entropy issue
 - [ ] Model serialization
-- [ ] Method for testing and calculating results
+- [x] Method for testing and calculating results
