@@ -9,7 +9,9 @@ class Classifier:
         self.encoder = autoencoder.buildCompleteNet(self.inputPlaceholder);
         input = self.encoder[len(self.encoder) - 1];
         self.weights = tf.Variable(tf.random_normal([input.shape[1].value, outputs]));
+        #self.fixed_weights = tf.Variable(tf.identity(self.weights)));
         self.biases = tf.Variable(tf.random_normal([outputs]));
+        #self.fixed_biases = tf.Variable(tf.identity(self.biases));
         self.layer = tf.nn.softmax(tf.matmul(input, self.weights) + self.biases);
         self.outputPlaceholder = tf.placeholder("float", [None, outputs]);
         
@@ -32,6 +34,16 @@ class Classifier:
             _, summary = self.autoencoder.session.run([optimizer, summary_op], feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
             if i % 100 == 0:
                 writer.add_summary(summary, i);
+
+    def test(self, data, desiredOutput):
+        correct_prediction = tf.equal(tf.argmax(self.layer, 1), tf.argmax(self.outputPlaceholder, 1));
+        accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+        return self.autoencoder.session.run(accuracy, feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
+        
+        
+        
+        
+
 
         
         
