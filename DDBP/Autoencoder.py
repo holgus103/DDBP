@@ -19,7 +19,7 @@ class Autoencoder:
         if isFixed:
             if isDecoder:
                 return tf.nn.sigmoid(tf.add(tf.matmul(input, self.fixedWeights[index], transpose_b = isDecoder), self.outBiasesFixed[index]));
-            return tf.nn.sigmoid(tf.add(tf.matmul(input, self.fixedWeights[index], transpose_b = isDecoder), self.biases[index]));
+            return tf.nn.sigmoid(tf.add(tf.matmul(input, self.fixedWeights[index], transpose_b = isDecoder), self.fixedBiases[index]));
         if isDecoder:
             return tf.nn.sigmoid(tf.add(tf.matmul(input, self.weights[index], transpose_b = isDecoder), self.outBiasesFixed[index]));
         return tf.nn.sigmoid(tf.add(tf.matmul(input, self.weights[index], transpose_b = isDecoder), self.biases[index]));
@@ -84,17 +84,17 @@ class Autoencoder:
             #with tf.Graph().as_default() as g:
             input = tf.placeholder("float", [len(data), self.inputCount]);
             net = self.buildPretrainNet(i, input);
-            lossFunction = self.loss(net[len(net) - 1], input);
-            opt = tf.train.AdamOptimizer(learningRate);
-            optimizer = opt.minimize(lossFunction);    
+            loss_function = self.loss(net[len(net) - 1], input);
+            opt = tf.train.RMSPropOptimizer(learningRate);
+            optimizer = opt.minimize(loss_function);    
             vars = self.getVariablesToInit(i);
-            self.session.run(tf.initialize_variables(vars));  
+            self.session.run(tf.variables_initializer(vars));  
             self.session.run(Tools.initializeOptimizer(opt, vars));
-            loss_summary = tf.summary.scalar("loss", lossFunction);
+            loss_summary = tf.summary.scalar("loss", loss_function);
             weights_summary = tf.summary.histogram("weights", self.weights[i]);
             biases_summary = tf.summary.histogram("biases", self.biases[i]);
             summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary]);
-            writer = tf.summary.FileWriter('./graphs/pretraining_{0}'.format(i), graph=self.session.graph_def, flush_secs = 10000);
+            writer = tf.summary.FileWriter('./graphs/pretraining_{0}'.format(i), graph=self.session.graph, flush_secs = 10000);
             
             for j in range(1, it[i]):
                     _, summary = self.session.run([optimizer, summary_op], feed_dict={input : data});

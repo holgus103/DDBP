@@ -6,9 +6,9 @@ import tensorflow as tf
 import time
 
 
-it = [1000, 1000, 1000, 1000];
+it = [10, 10, 10, 10];
 learningRate = 0.01;
-fileLinesCount = 10000;
+fileLinesCount = 10;
 start = time.time()
 data, outputs = DataParser.ReadFile("sol100000.txt", fileLinesCount)
 end = time.time()

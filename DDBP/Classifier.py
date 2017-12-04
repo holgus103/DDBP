@@ -1,4 +1,5 @@
 import tensorflow as tf;
+import Tools;
 
 class Classifier:
     """description of class"""
@@ -15,9 +16,11 @@ class Classifier:
 
     def train(self, data, desiredOutput, learningRate, it):
         loss = tf.reduce_mean(tf.pow(self.layer - self.outputPlaceholder, 2));
-        optimizer = tf.train.AdamOptimizer(learningRate).minimize(loss);
-        self.autoencoder.session.run(tf.initialize_variables([self.weights, self.biases]));
-
+        opt = tf.train.AdamOptimizer(learningRate);
+        optimizer = opt.minimize(loss);
+        self.autoencoder.session.run(tf.variables_initializer([self.weights, self.biases]));
+        slot_vars = [self.weights, self.biases] + self.autoencoder.biases + self.autoencoder.weights;
+        self.autoencoder.session.run(Tools.initializeOptimizer(opt, slot_vars));
         hist_summaries = [(self.autoencoder.weights[i], 'weights{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))];
         hist_summaries.extend([(self.autoencoder.biases[i], 'biases{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))]);
         summaries = [tf.summary.histogram(v[1], v[0]) for v in hist_summaries];
