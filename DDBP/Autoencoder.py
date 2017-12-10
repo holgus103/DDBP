@@ -79,7 +79,8 @@ class Autoencoder:
         config = tf.ConfigProto(inter_op_parallelism_threads=4,intra_op_parallelism_threads=4);
         self.__session = tf.Session(config=config);
      
-    def pretrain(self, learningRate, it, data, ep):
+    def pretrain(self, learningRate, it, data, ep, summary_path, optimizer_class):
+        "Please remember that the summary_path must contain one argument for formatting"
         self.prepare_session()
         init = tf.global_variables_initializer();
         self.session.run(init);
@@ -88,7 +89,7 @@ class Autoencoder:
             input = tf.placeholder("float", [len(data), self.inputCount]);
             net = self.buildPretrainNet(i, input);
             loss_function = self.loss(net[len(net) - 1], input);
-            opt = tf.train.RMSPropOptimizer(learningRate);
+            opt = optimizer_class(learningRate);
             optimizer = opt.minimize(loss_function);    
             vars = self.getVariablesToInit(i);
             self.session.run(tf.variables_initializer(vars));  
@@ -97,9 +98,9 @@ class Autoencoder:
             weights_summary = tf.summary.histogram("weights", self.weights[i]);
             biases_summary = tf.summary.histogram("biases", self.biases[i]);
             summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary]);
-            writer = tf.summary.FileWriter('./graphs/pretraining_{0}'.format(i), graph=self.session.graph, flush_secs = 10000);
+            writer = tf.summary.FileWriter(summary_path.format(i) + (ep[i] > 0 and "ep{0}".format(ep[i]) or "it{0}".format(it[i])) , graph=self.session.graph, flush_secs = 10000);
             
-            if(it > 0):
+            if(ep[i] == 0):
                 for j in range(1, it[i]):
                         _, summary = self.session.run([optimizer, summary_op], feed_dict={input : data});
                         if j % 100 == 0:
@@ -113,7 +114,8 @@ class Autoencoder:
                         print("pretraining {0} - it {1} - lval {2}".format(i, j, lval));
                         writer.add_summary(summary, j);
                     j = j + 1;
-                    if(lval < ep):
+                    if(lval < ep[i]):
+                        print("pretraining ended {0} - it {1} - lval {2}".format(i, j, lval));
                         break;
             
 
