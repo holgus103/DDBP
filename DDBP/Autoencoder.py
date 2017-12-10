@@ -68,9 +68,10 @@ class Autoencoder:
         self.session.run(init);
 
     def getVariablesToInit(self, n):
-        vars = [self.weights[n], self.biases[n]]
+        vars = [];
+        #vars = [self.weights[n], self.biases[n]]
 
-        vars.append(self.outBiases[n]);
+        #vars.append(self.outBiases[n]);
 
         if 0<n:
             vars.append(self.fixedBiases[n-1]);
@@ -93,7 +94,8 @@ class Autoencoder:
             opt = optimizer_class(learningRate[i]);
             optimizer = opt.minimize(loss_function);    
             vars = self.getVariablesToInit(i);
-            #self.session.run(tf.variables_initializer(vars));  
+            self.session.run(tf.variables_initializer(vars));  
+            vars.extend([self.weights[i], self.biases[i], self.outBiases[i]])
             self.session.run(Tools.initializeOptimizer(opt, vars));
             loss_summary = tf.summary.scalar("loss", loss_function);
             weights_summary = tf.summary.histogram("weights", self.weights[i]);
