@@ -57,7 +57,7 @@ def one_layer_rms_error_test() :
 def full_cross_entropy_test() :
     data, outputs = DataParser.ReadFile("sol100000.txt", 50);
     a = Autoencoder.Autoencoder(217, [104, 52, 26, 13], Autoencoder.Autoencoder.crossEntropyLoss);
-    a.pretrain([0.01, 0.01, 0.01, 0.01], [0, 0, 0, 0], data, [0.1, 0.3, 0.5, 0.7], "./summaries/all_layers_smalldataset_rms_crsent{0}" , tf.train.RMSPropOptimizer);
+    a.pretrain([0.01, 0.01, 0.01, 0.01], [0, 0, 0, 0], data, [0.0001, 0.01, 5, 10], "./summaries/all_layers_smalldataset_rms_crsent{0}" , tf.train.RMSPropOptimizer);
 
 def save_test():
     data, outputs = DataParser.ReadFile("sol100000.txt", 50);

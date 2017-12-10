@@ -17,7 +17,7 @@ class Classifier:
         self.outputPlaceholder = tf.placeholder("float", [None, outputs]);
         
 
-    def train(self, data, desiredOutput, learningRate, it):
+    def train(self, data, desiredOutput, learningRate, it, path):
         loss = tf.reduce_mean(tf.pow(self.layer - self.outputPlaceholder, 2));
         opt = tf.train.RMSPropOptimizer(learningRate);
         optimizer = opt.minimize(loss);
@@ -30,7 +30,7 @@ class Classifier:
         summaries.append(tf.summary.scalar("loss", loss));   
         summary_op = tf.summary.merge(summaries);
 
-        writer = tf.summary.FileWriter('./graphs/fine_tuning', graph=self.autoencoder.session.graph_def)
+        writer = tf.summary.FileWriter(path, graph=self.autoencoder.session.graph)
         for i in range(0, it):
             _, summary = self.autoencoder.session.run([optimizer, summary_op], feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
             if i % 100 == 0:
