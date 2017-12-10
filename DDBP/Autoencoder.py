@@ -64,11 +64,8 @@ class Autoencoder:
         for i in range(0, l - 1):
             self.createWeights(layerCounts[i], layerCounts[i + 1]);
         
-        # add decoding layers
-        #for i in range(1, l):
-        #    self.createWeights(layerCounts[l - i], layerCounts[l - i - 1]);
-        # add output layer
-        #self.createWeights(layerCounts[0], inputCount);
+        init = tf.global_variables_initializer();
+        self.session.run(init);
 
     def getVariablesToInit(self, n):
         vars = [self.weights[n], self.biases[n]]
@@ -84,20 +81,19 @@ class Autoencoder:
     def prepare_session(self):
         config = tf.ConfigProto(inter_op_parallelism_threads=4,intra_op_parallelism_threads=4);
         self.__session = tf.Session(config=config);
+
      
     def pretrain(self, learningRate, it, data, ep, summary_path, optimizer_class):
         "Please remember that the summary_path must contain one argument for formatting"
-        init = tf.global_variables_initializer();
-        self.session.run(init);
         for i in range(0, len(self.layerCounts)):
             #with tf.Graph().as_default() as g:
             input = self.input;
             net = self.buildPretrainNet(i, input);
             loss_function = self.loss(net[len(net) - 1], input);
-            opt = optimizer_class(learningRate);
+            opt = optimizer_class(learningRate[i]);
             optimizer = opt.minimize(loss_function);    
             vars = self.getVariablesToInit(i);
-            self.session.run(tf.variables_initializer(vars));  
+            #self.session.run(tf.variables_initializer(vars));  
             self.session.run(Tools.initializeOptimizer(opt, vars));
             loss_summary = tf.summary.scalar("loss", loss_function);
             weights_summary = tf.summary.histogram("weights", self.weights[i]);

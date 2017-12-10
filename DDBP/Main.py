@@ -1,4 +1,4 @@
 import Tests;
 import Autoencoder;
 
-Tests.restore_test();
+Tests.full_cross_entropy_test();
