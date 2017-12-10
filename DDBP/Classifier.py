@@ -1,5 +1,6 @@
 import tensorflow as tf;
 import Tools;
+import time;
 
 class Classifier:
     """description of class"""
@@ -40,6 +41,12 @@ class Classifier:
         correct_prediction = tf.equal(tf.argmax(self.layer, 1), tf.argmax(self.outputPlaceholder, 1));
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
         return self.autoencoder.session.run(accuracy, feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
+
+    def save_model(self):
+        saved = tf.train.Saver();
+        saver.save(self.autoencoder.session, "./models/{0}".format(time.ctime()));
+
+        
         
         
         

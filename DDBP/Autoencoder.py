@@ -1,5 +1,6 @@
 import tensorflow as tf;
 import Tools
+import numpy;
 # based on: https://github.com/aymericdamien/TensorFlow-Examples/blob/master/examples/3_NeuralNetworks/autoencoder.py
 class Autoencoder:
     def mseLoss(pred, actual):
@@ -10,6 +11,10 @@ class Autoencoder:
         a = tf.convert_to_tensor(actual);
         crossEntropy = tf.add(tf.multiply(tf.log(p + 1e-10), a), tf.multiply(tf.log(1 - p + 1e-10), 1 - a));
         return -tf.reduce_mean(tf.reduce_sum(crossEntropy, 1));
+
+
+    def directError(pred, actual):
+        return tf.reduce_mean(tf.abs(actual - pred));
 
     @property
     def session(self):
@@ -48,11 +53,12 @@ class Autoencoder:
         self.biases = [];
         self.outBiases = [];
         self.outBiasesFixed = [];
+        self.input = tf.placeholder("float", [None, self.inputCount]);
         #self.layers = [];
         self.fixedWeights = [];
         self.fixedBiases = []
         l = len(layerCounts);
-        
+        self.prepare_session();
         self.createWeights(inputCount, layerCounts[0]);
         # add encoding layers
         for i in range(0, l - 1):
@@ -81,12 +87,11 @@ class Autoencoder:
      
     def pretrain(self, learningRate, it, data, ep, summary_path, optimizer_class):
         "Please remember that the summary_path must contain one argument for formatting"
-        self.prepare_session()
         init = tf.global_variables_initializer();
         self.session.run(init);
         for i in range(0, len(self.layerCounts)):
             #with tf.Graph().as_default() as g:
-            input = tf.placeholder("float", [len(data), self.inputCount]);
+            input = self.input;
             net = self.buildPretrainNet(i, input);
             loss_function = self.loss(net[len(net) - 1], input);
             opt = optimizer_class(learningRate);
@@ -100,7 +105,7 @@ class Autoencoder:
             summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary]);
             writer = tf.summary.FileWriter(summary_path.format(i) + (ep[i] > 0 and "ep{0}".format(ep[i]) or "it{0}".format(it[i])) , graph=self.session.graph, flush_secs = 10000);
             
-            if(ep[i] == 0):
+            if(it[i] > 0):
                 for j in range(1, it[i]):
                         _, summary = self.session.run([optimizer, summary_op], feed_dict={input : data});
                         if j % 100 == 0:
@@ -114,8 +119,9 @@ class Autoencoder:
                         print("pretraining {0} - it {1} - lval {2}".format(i, j, lval));
                         writer.add_summary(summary, j);
                     j = j + 1;
-                    if(lval < ep[i]):
+                    if(lval <= ep[i]):
                         print("pretraining ended {0} - it {1} - lval {2}".format(i, j, lval));
+                        #print(numpy.sum(numpy.subtract(self.session.run([net[length(net) - 1]], feed_dict={input : [data[0]]})[0] - data[0])));
                         break;
             
 
@@ -148,6 +154,8 @@ class Autoencoder:
             inp = self.createLayer(n - 1 - i, inp, isFixed = True, isDecoder = True);
             layers.append(inp);
         return layers;
+
+
             
             
         

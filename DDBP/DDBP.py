@@ -17,7 +17,7 @@ print("Total time elapsed: " + str((end - start) * 1000) + " miliseconds with " 
 
 a = Autoencoder.Autoencoder(217, [104, 52, 26, 13], Autoencoder.Autoencoder.crossEntropyLoss);
 
-a.pretrain(learningRate, 0, data, 1.0, "pretrain{0}");
+a.pretrain(learningRate, 0, data, [0.1, 0.3, 0.5, 0.7], "./summaries/pretrain{0}".format(learningRate) + "{0}", tf.train.RMSPropOptimizer);
 c = Classifier.Classifier(a, 14);
 c.train(data, outputs, learningRate, 1000);
 c.test(data, outputs);
