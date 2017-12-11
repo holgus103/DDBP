@@ -27,7 +27,7 @@ class Classifier:
         hist_summaries = [(self.autoencoder.weights[i], 'weights{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))];
         hist_summaries.extend([(self.autoencoder.biases[i], 'biases{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))]);
         summaries = [tf.summary.histogram(v[1], v[0]) for v in hist_summaries];
-        summaries.append(tf.summary.scalar("loss", loss));   
+        summaries.append(tf.summary.scalar("loss_4", loss));   
         summary_op = tf.summary.merge(summaries);
 
         writer = tf.summary.FileWriter(path, graph=self.autoencoder.session.graph)
@@ -42,12 +42,12 @@ class Classifier:
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
         return self.autoencoder.session.run(accuracy, feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
 
-    def save_model(self):
-        saved = tf.train.Saver();
-        saver.save(self.autoencoder.session, "./models/{0}".format(time.ctime()));
+    def save_model(self, name):
+        saver = tf.train.Saver();
+        saver.save(self.autoencoder.session, "./models/{0}".format(name));
 
         
-        
+
         
         
         
