@@ -1,6 +1,7 @@
 import re
 import numpy
 import tensorflow as tf;
+import random;
 
 def Parse(input):
     # mapping for chars in value string
@@ -77,10 +78,16 @@ def processPlayer(cards):
     # east, north, west, south
     return numpy.concatenate(tuple(p));
 
-def ReadFile(path, linesCount):
+def ReadFile(path, linesCount, shuffle = False):
+    def process(dataSet, outputsSet, line):
+        data, outputs = Parse(line);
+        dataSet.append(data)
+        outputsSet.append(outputs)
+
     dataSet = []
     outputsSet = []
     lineNumber = 1
+    lines = [];
     with open(path, "r") as file:
         for line in file:
             if lineNumber > linesCount:
@@ -88,12 +95,17 @@ def ReadFile(path, linesCount):
             if lineNumber % 100  == 0:
                 print("Reading line {0}".format(lineNumber));
             #print(line)
-            data, outputs = Parse(line);
-            dataSet.append(data)
-            outputsSet.append(outputs)
+            if(shuffle):
+                lines.append(line)
+            else:
+                process(dataSet, outputsSet, line);
             #dataSet = dataSet + data;
             #outputsSet = outputsSet + outputs;
             lineNumber = lineNumber + 1
+    if(shuffle):
+        random.shuffle(lines);
+        for line in lines:
+            process(dataSet, outputsSet, line);
     return combineDataSets(dataSet, outputsSet)
 
 def combineDataSets(dataSets, outputSets):

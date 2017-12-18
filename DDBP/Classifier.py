@@ -39,8 +39,13 @@ class Classifier:
 
     def test(self, data, desiredOutput):
         correct_prediction = tf.equal(tf.argmax(self.layer, 1), tf.argmax(self.outputPlaceholder, 1));
+        missed_by_one = tf.less_equal(tf.abs(tf.argmax(self.layer, 1) - tf.argmax(self.outputPlaceholder, 1)), 1);
+        missed_by_two = tf.less_equal(tf.abs(tf.argmax(self.layer, 1) - tf.argmax(self.outputPlaceholder, 1)), 2);
+
         accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-        return self.autoencoder.session.run(accuracy, feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
+        accuracy_missed_by_one = tf.reduce_mean(tf.cast(missed_by_one, "float"))
+        accuracy_missed_by_two = tf.reduce_mean(tf.cast(missed_by_two, "float"))
+        return self.autoencoder.session.run([accuracy, accuracy_missed_by_one, accuracy_missed_by_two], feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
 
     def save_model(self, name):
         saver = tf.train.Saver();
