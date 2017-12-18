@@ -6,5 +6,5 @@
 - [x] RMS-optimizer
 - [x] Adam-optimizer
 - [x] Cross-entropy issue
-- [ ] Model serialization
+- [x] Model serialization
 - [x] Method for testing and calculating results
