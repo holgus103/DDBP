@@ -84,43 +84,42 @@ class Autoencoder:
         self.__session = tf.Session(config=config);
 
      
-    def pretrain(self, learningRate, it, data, ep, summary_path, optimizer_class):
+    def pretrain(self, learningRate, i, it, data, ep, summary_path, optimizer_class = tf.train.RMSPropOptimizer, m = 0.2, decay = 0.9):
         "Please remember that the summary_path must contain one argument for formatting"
-        for i in range(0, len(self.layerCounts)):
-            #with tf.Graph().as_default() as g:
-            input = self.input;
-            net = self.buildPretrainNet(i, input);
-            loss_function = self.loss(net[len(net) - 1], input);
-            opt = optimizer_class(learningRate[i]);
-            optimizer = opt.minimize(loss_function);    
-            vars = self.getVariablesToInit(i);
-            self.session.run(tf.variables_initializer(vars));  
-            vars.extend([self.weights[i], self.biases[i], self.outBiases[i]])
-            self.session.run(Tools.initializeOptimizer(opt, vars));
-            loss_summary = tf.summary.scalar("loss", loss_function);
-            weights_summary = tf.summary.histogram("weights", self.weights[i]);
-            biases_summary = tf.summary.histogram("biases", self.biases[i]);
-            summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary]);
-            writer = tf.summary.FileWriter(summary_path.format(i) + (ep[i] > 0 and "ep{0}".format(ep[i]) or "it{0}".format(it[i])) , graph=self.session.graph, flush_secs = 10000);
+        #with tf.Graph().as_default() as g:
+        input = self.input;
+        net = self.buildPretrainNet(i, input);
+        loss_function = self.loss(net[len(net) - 1], input);
+        opt = optimizer_class(learningRate, momentum = m);
+        optimizer = opt.minimize(loss_function);    
+        vars = self.getVariablesToInit(i);
+        self.session.run(tf.variables_initializer(vars));  
+        vars.extend([self.weights[i], self.biases[i], self.outBiases[i]])
+        self.session.run(Tools.initializeOptimizer(opt, vars));
+        loss_summary = tf.summary.scalar("loss", loss_function);
+        weights_summary = tf.summary.histogram("weights", self.weights[i]);
+        biases_summary = tf.summary.histogram("biases", self.biases[i]);
+        summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary]);
+        writer = tf.summary.FileWriter(summary_path.format(i) + (ep > 0 and "ep{0}".format(ep) or "it{0}".format(it)) , graph=self.session.graph, flush_secs = 10000);
             
-            if(it[i] > 0):
-                for j in range(1, it[i]):
-                        _, summary = self.session.run([optimizer, summary_op], feed_dict={input : data});
-                        if j % 100 == 0:
-                            print("pretraining {0} - it {1}".format(i, j));
-                            writer.add_summary(summary, j);
-            else:
-                j = 0;
-                while True:
-                    _, summary, lval = self.session.run([optimizer, summary_op, loss_function], feed_dict={input : data});
+        if(it > 0):
+            for j in range(1, it):
+                    lval, _, summary = self.session.run([loss_function, optimizer, summary_op], feed_dict={input : data});
                     if j % 100 == 0:
                         print("pretraining {0} - it {1} - lval {2}".format(i, j, lval));
                         writer.add_summary(summary, j);
-                    j = j + 1;
-                    if(lval <= ep[i]):
-                        print("pretraining ended {0} - it {1} - lval {2}".format(i, j, lval));
-                        #print(numpy.sum(numpy.subtract(self.session.run([net[length(net) - 1]], feed_dict={input : [data[0]]})[0] - data[0])));
-                        break;
+        else:
+            j = 0;
+            while True:
+                _, summary, lval = self.session.run([optimizer, summary_op, loss_function], feed_dict={input : data});
+                if j % 100 == 0:
+                    print("pretraining {0} - it {1} - lval {2}".format(i, j, lval));
+                    writer.add_summary(summary, j);
+                j = j + 1;
+                if(lval <= ep):
+                    print("pretraining ended {0} - it {1} - lval {2}".format(i, j, lval));
+                    #print(numpy.sum(numpy.subtract(self.session.run([net[length(net) - 1]], feed_dict={input : [data[0]]})[0] - data[0])));
+                    break;
             
 
             
