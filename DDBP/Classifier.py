@@ -32,8 +32,9 @@ class Classifier:
 
         writer = tf.summary.FileWriter(path, graph=self.autoencoder.session.graph)
         for i in range(0, it):
-            _, summary = self.autoencoder.session.run([optimizer, summary_op], feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
+            lval, _, summary = self.autoencoder.session.run([loss ,optimizer, summary_op], feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
             if i % 100 == 0:
+                print("finetuning - it {1} - lval {2}".format(i, lval));
                 #print("finetuning - it {0}".format(i));
                 writer.add_summary(summary, i);
 

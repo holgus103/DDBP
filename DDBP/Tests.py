@@ -120,12 +120,18 @@ def variousL1Sizes():
 
 def fulltest():
     data, outputs = DataParser.ReadFile("sol100000.txt", 1500);
-    a = Autoencoder.Autoencoder(217, [104, 96, 54], Autoencoder.Autoencoder.crossEntropyLoss);
-    a.pretrain(0.01, 0, 10000, data[0:20000], 0, "./summaries/finaltest1500/{0}" , tf.train.RMSPropOptimizer, 0.2);
-    a.pretrain(0.01, 1, 10000, data[0:20000], 0, "./summaries/finaltest1500/{0}" , tf.train.RMSPropOptimizer, 0.2);
-    a.pretrain(0.01, 2, 10000, data[0:20000], 0, "./summaries/finaltest1500/{0}" , tf.train.RMSPropOptimizer, 0.2);
+    path = "./summaries/finaltest1500_7laters/{0}";
+    a = Autoencoder.Autoencoder(217, [173, 140, 110, 90, 56, 45, 36], Autoencoder.Autoencoder.crossEntropyLoss);
+    a.pretrain(0.01, 0, 4000, data[0:20000], 0, path , tf.train.RMSPropOptimizer, 0.2);
+    a.pretrain(0.01, 1, 10000, data[0:20000], 0, path , tf.train.RMSPropOptimizer, 0.2);
+    a.pretrain(0.01, 2, 10000, data[0:20000], 0, path , tf.train.RMSPropOptimizer, 0.2);
+    a.pretrain(0.01, 3, 10000, data[0:20000], 0, path , tf.train.RMSPropOptimizer, 0.2);
+    a.pretrain(0.01, 4, 10000, data[0:20000], 0, path , tf.train.RMSPropOptimizer, 0.2);
+    a.pretrain(0.01, 5, 10000, data[0:20000], 0, path , tf.train.RMSPropOptimizer, 0.2);
+    a.pretrain(0.01, 6, 10000, data[0:20000], 0, path , tf.train.RMSPropOptimizer, 0.2);
     c = Classifier.Classifier(a, 14);
-    c.train(data[0:20000], outputs[0:20000], 0.01, 10000, "./summaries/finaltest1500/finetuning");
+    c.train(data[0:20000], outputs[0:20000], 0.01, 10000, "./summaries/finaltest1500_7laters/finetuning");
+    print(c.test(data[0:20000], outputs[0:20000]));
     print(c.test(data[20001: 30000], outputs[20001:30000]));
 
     

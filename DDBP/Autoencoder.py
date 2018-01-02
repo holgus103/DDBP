@@ -80,7 +80,7 @@ class Autoencoder:
         return vars;
 
     def prepare_session(self):
-        config = tf.ConfigProto(inter_op_parallelism_threads=4,intra_op_parallelism_threads=4);
+        config = tf.ConfigProto();
         self.__session = tf.Session(config=config);
 
      
@@ -88,11 +88,13 @@ class Autoencoder:
         "Please remember that the summary_path must contain one argument for formatting"
         #with tf.Graph().as_default() as g:
         input = self.input;
+        step = tf.Variable(0, name='global_step', trainable=False);
         net = self.buildPretrainNet(i, input);
         loss_function = self.loss(net[len(net) - 1], input);
         opt = optimizer_class(learningRate, momentum = m);
-        optimizer = opt.minimize(loss_function);    
+        optimizer = opt.minimize(loss_function, global_step=step);    
         vars = self.getVariablesToInit(i);
+        vars.append(step);
         self.session.run(tf.variables_initializer(vars));  
         vars.extend([self.weights[i], self.biases[i], self.outBiases[i]])
         self.session.run(Tools.initializeOptimizer(opt, vars));

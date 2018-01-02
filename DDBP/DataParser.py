@@ -92,20 +92,24 @@ def ReadFile(path, linesCount, shuffle = False):
         for line in file:
             if lineNumber > linesCount:
                 break
-            if lineNumber % 100  == 0:
-                print("Reading line {0}".format(lineNumber));
             #print(line)
             if(shuffle):
                 lines.append(line)
             else:
+                if lineNumber % 100  == 0:
+                    print("Reading line {0}".format(lineNumber));
                 process(dataSet, outputsSet, line);
             #dataSet = dataSet + data;
             #outputsSet = outputsSet + outputs;
             lineNumber = lineNumber + 1
     if(shuffle):
         random.shuffle(lines);
+        lineNumber = 1;
         for line in lines:
+            if lineNumber % 100  == 0:
+                print("Reading line {0}".format(lineNumber));
             process(dataSet, outputsSet, line);
+            lineNumber = lineNumber;
     return combineDataSets(dataSet, outputsSet)
 
 def combineDataSets(dataSets, outputSets):
@@ -114,6 +118,8 @@ def combineDataSets(dataSets, outputSets):
     for i in range(0, len(dataSets)):
         dataSet = dataSets[i]
         outputSet = outputSets[i]
+        if i % 100  == 0:
+            print("appending {0}".format(i));
         for j in range(0, len(dataSet)):
             data.append(dataSet[j])
             outputs.append(outputSet[j])
