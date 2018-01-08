@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>4d3ec3d9-70a6-4e02-82ab-46e0c29720db</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>DDBP.py</StartupFile>
+    <StartupFile>FutherTraining.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -32,6 +32,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DDBP.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="FutherTraining.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Main.py">

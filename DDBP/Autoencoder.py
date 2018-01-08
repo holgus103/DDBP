@@ -106,14 +106,17 @@ class Autoencoder:
             
         if(it > 0):
             for j in range(1, it):
-                    lval, _, summary = self.session.run([loss_function, optimizer, summary_op], feed_dict={input : data});
+                    for k in range(0, len(data)):
+                        lval, _, summary = self.session.run([loss_function, optimizer, summary_op], feed_dict={input : data[k]});
                     if j % 100 == 0:
                         print("pretraining {0} - it {1} - lval {2}".format(i, j, lval));
                         writer.add_summary(summary, j);
         else:
             j = 0;
             while True:
-                _, summary, lval = self.session.run([optimizer, summary_op, loss_function], feed_dict={input : data});
+                for k in range(0, len(data)):
+                    _, summary, lval = self.session.run([optimizer, summary_op, loss_function], feed_dict={input : data[k]});
+                
                 if j % 100 == 0:
                     print("pretraining {0} - it {1} - lval {2}".format(i, j, lval));
                     writer.add_summary(summary, j);

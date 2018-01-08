@@ -1,6 +1,7 @@
 import tensorflow as tf;
 import Tools;
 import time;
+import Autoencoder;
 
 class Classifier:
     """description of class"""
@@ -17,8 +18,9 @@ class Classifier:
         self.outputPlaceholder = tf.placeholder("float", [None, outputs]);
         
 
-    def train(self, data, desiredOutput, learningRate, it, path):
-        loss = tf.reduce_mean(tf.pow(self.layer - self.outputPlaceholder, 2));
+    def train(self, data, desiredOutput, learningRate, it, path, lossf = Autoencoder.Autoencoder.mseLoss):
+        loss = lossf(self.outputPlaceholder, self.layer); 
+        #tf.reduce_mean(tf.pow(self.layer - self.outputPlaceholder, 2));
         opt = tf.train.RMSPropOptimizer(learningRate);
         optimizer = opt.minimize(loss);
         self.autoencoder.session.run(tf.variables_initializer([self.weights, self.biases]));
@@ -32,9 +34,10 @@ class Classifier:
 
         writer = tf.summary.FileWriter(path, graph=self.autoencoder.session.graph)
         for i in range(0, it):
-            lval, _, summary = self.autoencoder.session.run([loss ,optimizer, summary_op], feed_dict={self.inputPlaceholder: data, self.outputPlaceholder: desiredOutput});
+            for k in range(0, len(data)):
+                lval, _, summary = self.autoencoder.session.run([loss ,optimizer, summary_op], feed_dict={self.inputPlaceholder: data[k], self.outputPlaceholder: desiredOutput[k]});
             if i % 100 == 0:
-                print("finetuning - it {1} - lval {2}".format(i, lval));
+                print("finetuning - it {0} - lval {1}".format(i, lval));
                 #print("finetuning - it {0}".format(i));
                 writer.add_summary(summary, i);
 
@@ -51,6 +54,10 @@ class Classifier:
     def save_model(self, name):
         saver = tf.train.Saver();
         saver.save(self.autoencoder.session, "./models/{0}".format(name));
+
+    def restore_model(self, name):
+        saver = tf.train.Saver();
+        saver.restore(self.autoencoder.session, "./models/{0}".format(name));
 
         
 

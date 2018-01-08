@@ -109,7 +109,7 @@ def ReadFile(path, linesCount, shuffle = False):
             if lineNumber % 100  == 0:
                 print("Reading line {0}".format(lineNumber));
             process(dataSet, outputsSet, line);
-            lineNumber = lineNumber;
+            lineNumber = lineNumber + 1;
     return combineDataSets(dataSet, outputsSet)
 
 def combineDataSets(dataSets, outputSets):
