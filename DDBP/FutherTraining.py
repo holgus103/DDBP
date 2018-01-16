@@ -29,6 +29,7 @@ c = Classifier.Classifier(a, 14);
 c.restore_model("50k");
 print(c.test(data[0:test_end], outputs[0:test_end]));
 print(c.test(data[test_end: l], outputs[test_end:l]));
+
 c.train(data_batches, outputs_batches, 0.001, 10000, "./summaries/finetuning", Autoencoder.Autoencoder.crossEntropyLoss);
 print(c.test(data[0:test_end], outputs[0:test_end]));
 print(c.test(data[test_end: l], outputs[test_end:l]));

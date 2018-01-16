@@ -3,7 +3,7 @@ import numpy
 import tensorflow as tf;
 import random;
 
-def Parse(input):
+def Parse(input, no_trump, trump):
     # mapping for chars in value string
     dict = {
         '0' : 0, 
@@ -34,8 +34,12 @@ def Parse(input):
         outputs.append(arr);
 
     players = numpy.concatenate((processPlayer(vals[0]), processPlayer(vals[1]), processPlayer(vals[2]), processPlayer(vals[3])));
-    for suit in range(0, 5):
+    b = (no_trump and 1 or 2) - 1 ;
+    e = trump and 5 or 1;
+
+    for suit in range(b, e):
         for vista in range(0,4):
+            
             suit_arr = numpy.repeat(0, 5);
             vista_arr = numpy.repeat(0, 4);
             suit_arr[suit] = 1;
@@ -78,9 +82,9 @@ def processPlayer(cards):
     # east, north, west, south
     return numpy.concatenate(tuple(p));
 
-def ReadFile(path, linesCount, shuffle = False):
-    def process(dataSet, outputsSet, line):
-        data, outputs = Parse(line);
+def ReadFile(path, linesCount, shuffle = False, no_trump = True, trump = True):
+    def process(dataSet, outputsSet, line, no_trump, trump):
+        data, outputs = Parse(line, no_trump, trump);
         dataSet.append(data)
         outputsSet.append(outputs)
 
@@ -98,7 +102,7 @@ def ReadFile(path, linesCount, shuffle = False):
             else:
                 if lineNumber % 100  == 0:
                     print("Reading line {0}".format(lineNumber));
-                process(dataSet, outputsSet, line);
+                process(dataSet, outputsSet, line, no_trump, trump);
             #dataSet = dataSet + data;
             #outputsSet = outputsSet + outputs;
             lineNumber = lineNumber + 1
@@ -108,7 +112,7 @@ def ReadFile(path, linesCount, shuffle = False):
         for line in lines:
             if lineNumber % 100  == 0:
                 print("Reading line {0}".format(lineNumber));
-            process(dataSet, outputsSet, line);
+            process(dataSet, outputsSet, line, no_trump, trump);
             lineNumber = lineNumber + 1;
     return combineDataSets(dataSet, outputsSet)
 
