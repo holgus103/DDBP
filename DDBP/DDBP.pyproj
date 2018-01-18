@@ -49,7 +49,7 @@
     <Compile Include="Tests.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Tools.py">
+    <Compile Include="tools.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>

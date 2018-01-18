@@ -8,12 +8,7 @@ import Autoencoder;
 import Classifier;
 import DataParser;
 
-def test(c, test_data, test_labels, suits):
-    l = len(test_data);
-    for i in range(0, suits):        
-        input = [test_data[x] for x in range(0, l) if x % (suits * 4) in range(4 * i, 4*i + 4)];
-        labels = [test_labels[x] for x in range(0, l) if x % (suits * 4) in range(4 * i, 4*i + 4)];
-        print(c.test(input, labels));
+
     
 
 data, outputs = DataParser.ReadFile("sol100000.txt", 50000, True);
