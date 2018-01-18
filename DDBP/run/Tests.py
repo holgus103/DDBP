@@ -1,6 +1,4 @@
-import DataParser;
-import Autoencoder;
-import Classifier;
+import models;
 import tensorflow as tf;
 import time;
 import random;

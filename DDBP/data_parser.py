@@ -148,8 +148,7 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
 
     """
     def process(data_set, outputs_set, line, no_trump, trump):
-        data, outputs = parse
-    (line, no_trump, trump);
+        data, outputs = parse(line, no_trump, trump);
         data_set.append(data)
         outputs_set.append(outputs)
 

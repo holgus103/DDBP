@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>4d3ec3d9-70a6-4e02-82ab-46e0c29720db</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>SuitBasedTest.py</StartupFile>
+    <StartupFile>run\DDBP.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,39 +22,29 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Autoencoder.py">
+    <Compile Include="data_parser.py" />
+    <Compile Include="run\DDBP.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Classifier.py">
+    <Compile Include="run\FinalTest.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DataParser.py">
+    <Compile Include="run\FutherTraining.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DDBP.py">
+    <Compile Include="run\Main.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="FinalTest.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="FutherTraining.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Main.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="SuitBasedTest.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Tests.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="tools.py">
+    <Compile Include="models.py" />
+    <Compile Include="run\Tests.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <InterpreterReference Include="Global|PythonCore|3.6" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="run\" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

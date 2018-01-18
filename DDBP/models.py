@@ -1,5 +1,4 @@
 import tensorflow as tf;
-import tools;
 import time;
 
 class Model:
@@ -25,7 +24,7 @@ class Model:
         """
         return tf.reduce_mean(tf.pow(actual - pred, 2));
 
-    def cross_entropy_oss(pred, actual):
+    def cross_entropy_loss(pred, actual):
         """
         Cross Entropy loss function 
 
@@ -196,7 +195,7 @@ class Autoencoder(Model):
         self.create_weights(input_count, layer_counts[0]);
         # add encoding layers
         for i in range(0, l - 1):
-            self.createWeights(layer_counts[i], layer_counts[i + 1]);
+            self.create_weights(layer_counts[i], layer_counts[i + 1]);
         
         init = tf.global_variables_initializer();
         self.session.run(init);
@@ -278,7 +277,7 @@ class Autoencoder(Model):
         vars.append(step);
         self.session.run(tf.variables_initializer(vars));  
         vars.extend([self.weights[i], self.biases[i], self.out_biases[i]])
-        self.session.run(tools.initialize_optimizer(opt, vars));
+        self.session.run(Model.initialize_optimizer(opt, vars));
         loss_summary = tf.summary.scalar("loss", loss_function);
         weights_summary = tf.summary.histogram("weights", self.weights[i]);
         biases_summary = tf.summary.histogram("biases", self.biases[i]);
@@ -398,7 +397,7 @@ class Classifier(Model):
         self.output_placeholder = tf.placeholder("float", [None, outputs]);
         
 
-    def train(self, data, desired_output, learning_rate, it, path, loss_f = Autoencoder.Autoencoder.mseLoss):
+    def train(self, data, desired_output, learning_rate, it, path, loss_f = Model.mse_loss):
         """
         Main train method
     
@@ -421,12 +420,12 @@ class Classifier(Model):
             Loss function used by the optimizer
             
         """
-        loss = loss_f(self.outputPlaceholder, self.layer); 
+        loss = loss_f(self.output_placeholder, self.layer); 
         opt = tf.train.RMSPropOptimizer(learning_rate);
         optimizer = opt.minimize(loss);
         self.autoencoder.session.run(tf.variables_initializer([self.weights, self.biases]));
         slot_vars = [self.weights, self.biases] + self.autoencoder.biases + self.autoencoder.weights;
-        self.autoencoder.session.run(tools.initialize_optimizer(opt, slot_vars));
+        self.autoencoder.session.run(Model.initialize_optimizer(opt, slot_vars));
         hist_summaries = [(self.autoencoder.weights[i], 'weights{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))];
         hist_summaries.extend([(self.autoencoder.biases[i], 'biases{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))]);
         summaries = [tf.summary.histogram(v[1], v[0]) for v in hist_summaries];

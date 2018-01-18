@@ -3,9 +3,7 @@ import tensorflow as tf
 import time
 import random;
 import numpy;
-import Autoencoder;
-import Classifier;
-import DataParser;
+import models;
 
 
 data, outputs = DataParser.ReadFile("sol100000.txt", 100000, True);
@@ -24,7 +22,7 @@ for i in range(0, batch_count-1):
 data_batches.append(data[(batch_count - 1) * batch_size : l]);
 outputs_batches.append(outputs[(batch_count - 1) * batch_size : l]);
 
-a = Autoencoder.Autoencoder(217, [174, 140, 112, 90], Autoencoder.Autoencoder.crossEntropyLoss);
+a = models.Autoencoder(217, [174, 140, 112, 90], models.Autoencoder.cross_entropy_loss);
 c = Classifier.Classifier(a, 14);
 c.restore_model("50k");
 v1 = c.test(data_batches[0], outputs_batches[0]);
