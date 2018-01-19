@@ -491,12 +491,19 @@ class Classifier(Model):
             List of numpy arrays with labels for the corresponding training inputs
         suits : int
             A number indicating the number of suits in the input data    
+
+        Returns
+        -------
+        list
+            List of results for each suit
         """
         l = len(test_data);
+        res = [];
         for i in range(0, suits):        
             input = [test_data[x] for x in range(0, l) if x % (suits * 4) in range(4 * i, 4*i + 4)];
             labels = [test_labels[x] for x in range(0, l) if x % (suits * 4) in range(4 * i, 4*i + 4)];
-            print(self.test(input, labels));
+            res.append(self.test(input, labels));
+        return res;
 
     def save_model(self, name):
         """
@@ -534,3 +541,10 @@ class Classifier(Model):
         """
         saver = tf.train.Saver();
         saver.restore(self.autoencoder.session, "./models/{0}".format(name));
+
+    def multi_batch_test(self, suits, data_batches, outputs_batches, batch_count):
+        res = [];
+        for i in range(0, batch_count):
+            res.append(self.suit_based_accurancy(data_batches[i], outputs_batches[i], suits));
+
+        return ([sum(z)/batch_count for x in list(zip(*res)) for z in zip(*x)], res);

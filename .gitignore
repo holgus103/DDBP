@@ -1,6 +1,8 @@
 /DDBP/graphs/
 /DDBP/summaries/
 /DDBP/models/
+/DDBP/run/models/
+/DDBP/run/summaries/
 *.suo
 *.pyc
 *.htm

@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>4d3ec3d9-70a6-4e02-82ab-46e0c29720db</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>run\DDBP.py</StartupFile>
+    <StartupFile>run\FinalTest.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>

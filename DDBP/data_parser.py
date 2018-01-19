@@ -233,4 +233,14 @@ def save_as_tfrecord(data, output, name):
         writer.write(example.SerializeToString());
     
     writer.close();
+
+def divide_into_batches(batch_count, data_batches, outputs_batches, data, outputs):
+    l = len(data);
+    batch_size = int(l / batch_count);
+    for i in range(0, batch_count-1):
+        data_batches.append(data[i * batch_size : (i + 1) * batch_size]);
+        outputs_batches.append(outputs[i * batch_size : (i + 1) * batch_size]);
+
+    data_batches.append(data[(batch_count - 1) * batch_size : l]);
+    outputs_batches.append(outputs[(batch_count - 1) * batch_size : l]);
         

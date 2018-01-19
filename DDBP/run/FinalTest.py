@@ -7,34 +7,38 @@ import models;
 import data_parser as dp
 
 
-data, outputs = dp.ReadFile("sol100000.txt", 100000, True);
+
+
+
+
+model_names = ["colors_2", "50k", "no_trump"]
+data, outputs = dp.read_file("./data/sol100000.txt", 50000, True);
 
 l = len(data);
+test_end = int(0.66 * l);
 
 batch_count = 4;
+test_batches_count = 1;
 data_batches = [];
 outputs_batches = [];
+test_batches = [];
+outputs_test_batches = [];
 # separate data into batches
+# training set
+dp.divide_into_batches(batch_count, data_batches, outputs_batches, data[0:test_end], outputs[0:test_end]);
+# test set
+dp.divide_into_batches(test_batches_count, test_batches, outputs_test_batches, data[test_end:l], outputs[test_end:l])
 
-batch_size = int(l / batch_count);
-for i in range(0, batch_count-1):
-    data_batches.append(data[i * batch_size : (i + 1) * batch_size]);
-    outputs_batches.append(outputs[i * batch_size : (i + 1) * batch_size]);
-
-data_batches.append(data[(batch_count - 1) * batch_size : l]);
-outputs_batches.append(outputs[(batch_count - 1) * batch_size : l]);
 
 a = models.Autoencoder(217, [174, 140, 112, 90], models.Model.cross_entropy_loss);
 c = models.Classifier(a, 14);
-c.restore_model("50k");
-v1 = c.test(data_batches[0], outputs_batches[0]);
-print(v1);
-v2 = c.test(data_batches[1], outputs_batches[1]);
-print(v2);
-v3 = c.test(data_batches[2], outputs_batches[2]);
-print(v3);
-v4 = c.test(data_batches[3], outputs_batches[3]);
-print(v1);
 
-print("final")
-print([sum(x) / 4 for x in zip(v1, v2, v3, v4)]);
+for name in model_names:
+    c.restore_model(name);
+    print(name)
+    print("Training set:")
+    res = c.suit_based_accurancy(data[0:test_end], outputs[0:test_end], 5);
+    print(res);
+    print("Test set")
+    res = c.suit_based_accurancy(data[0:test_end], outputs[0:test_end], 5);
+    print(res)
