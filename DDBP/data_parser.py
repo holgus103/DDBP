@@ -54,7 +54,10 @@ def parse(input, no_trump, trump):
     outputs = [];
     vals = t[0].split(" ");    
 
-    for c in t[1]:
+
+    b = (no_trump and 1 or 2) - 1 ;
+    e = trump and 5 or 1;
+    for c in t[1][b*4:e*4]:
         arr = numpy.repeat(0, 14);
         if c=="\n":
             continue
@@ -62,8 +65,6 @@ def parse(input, no_trump, trump):
         outputs.append(arr);
 
     players = numpy.concatenate((process_player(vals[0]), process_player(vals[1]), process_player(vals[2]), process_player(vals[3])));
-    b = (no_trump and 1 or 2) - 1 ;
-    e = trump and 5 or 1;
 
     for suit in range(b, e):
         for vista in range(0,4):
@@ -235,6 +236,22 @@ def save_as_tfrecord(data, output, name):
     writer.close();
 
 def divide_into_batches(batch_count, data_batches, outputs_batches, data, outputs):
+    """
+    Divides data into batches
+
+    Parameters
+    ----------
+    batch_count : int
+        Number of batches
+    data_batches : list
+        List of input data batches
+    outputs_batches : list
+        List of output data batches
+    data : list
+        All input data to be divided 
+    outputs : int
+        Output data to be batched
+    """
     l = len(data);
     batch_size = int(l / batch_count);
     for i in range(0, batch_count-1):

@@ -543,6 +543,23 @@ class Classifier(Model):
         saver.restore(self.autoencoder.session, "./models/{0}".format(name));
 
     def multi_batch_test(self, suits, data_batches, outputs_batches, batch_count):
+        """
+        Multibatch testing method
+
+        This method aggregates the results for several batches.
+
+        Parameters
+        ----------
+        self : Classifier 
+        suits : int
+            Number of suits
+        data_batches : list
+            List of input data batches
+        outputs_batches : list
+            List of output data batches
+        batch_count : int
+            Number of batches
+        """
         res = [];
         for i in range(0, batch_count):
             res.append(self.suit_based_accurancy(data_batches[i], outputs_batches[i], suits));
