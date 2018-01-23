@@ -1,0 +1,484 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module models</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>models</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/holgus103/Projects/DDBP/DDBP/models.py">/home/holgus103/Projects/DDBP/DDBP/models.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="tensorflow.html">tensorflow</a><br>
+</td><td width="25%" valign=top><a href="time.html">time</a><br>
+</td><td width="25%" valign=top></td><td width="25%" valign=top></td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ee77aa">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Classes</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#ee77aa"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl>
+<dt><font face="helvetica, arial"><a href="models.html#Model">Model</a>
+</font></dt><dd>
+<dl>
+<dt><font face="helvetica, arial"><a href="models.html#Autoencoder">Autoencoder</a>
+</font></dt><dt><font face="helvetica, arial"><a href="models.html#Classifier">Classifier</a>
+</font></dt></dl>
+</dd>
+</dl>
+ <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Autoencoder">class <strong>Autoencoder</strong></a>(<a href="models.html#Model">Model</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;implementing&nbsp;a&nbsp;multilayered&nbsp;<a href="#Autoencoder">Autoencoder</a>&nbsp;Network<br>
+Reference:&nbsp;https://github.com/aymericdamien/TensorFlow-Examples/blob/master/examples/3_NeuralNetworks/autoencoder.py<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Autoencoder-__init__"><strong>__init__</strong></a>(self, input_count, layer_counts, loss)</dt><dd><tt>Main&nbsp;class&nbsp;constructor<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+input_count&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Number&nbsp;of&nbsp;network's&nbsp;inputs<br>
+layer_counts&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;neuron&nbsp;counts&nbsp;for&nbsp;each&nbsp;layer<br>
+loss&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Loss&nbsp;function&nbsp;used&nbsp;during&nbsp;model&nbsp;optimalization</tt></dd></dl>
+
+<dl><dt><a name="Autoencoder-build_complete_net"><strong>build_complete_net</strong></a>(self, input)</dt><dd><tt>Builds&nbsp;a&nbsp;complete&nbsp;network&nbsp;of&nbsp;all&nbsp;encoding&nbsp;layers&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+input&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Input&nbsp;placeholder&nbsp;used&nbsp;to&nbsp;feed&nbsp;data&nbsp;to&nbsp;the&nbsp;network<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;Tensor&nbsp;objects&nbsp;that&nbsp;create&nbsp;the&nbsp;network</tt></dd></dl>
+
+<dl><dt><a name="Autoencoder-build_pretrain_net"><strong>build_pretrain_net</strong></a>(self, n, input)</dt><dd><tt>Builds&nbsp;a&nbsp;partially&nbsp;frozen&nbsp;and&nbsp;uncomplete&nbsp;network&nbsp;used&nbsp;for&nbsp;pretraining&nbsp;steps<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+n&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Layer&nbsp;index<br>
+input&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Input&nbsp;placeholder&nbsp;used&nbsp;to&nbsp;feed&nbsp;data&nbsp;to&nbsp;the&nbsp;network<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;Tensor&nbsp;objects&nbsp;that&nbsp;create&nbsp;the&nbsp;network</tt></dd></dl>
+
+<dl><dt><a name="Autoencoder-create_layer"><strong>create_layer</strong></a>(self, index, input, is_fixed<font color="#909090">=False</font>, is_decoder<font color="#909090">=False</font>)</dt><dd><tt>Creates&nbsp;an&nbsp;autoencoder&nbsp;layer<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+index&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Layer&nbsp;index<br>
+input&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Previous&nbsp;layer&nbsp;feed&nbsp;to&nbsp;the&nbsp;new&nbsp;layer<br>
+is_fixed&nbsp;:&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Boolean&nbsp;value&nbsp;indicating&nbsp;whether&nbsp;the&nbsp;layer&nbsp;needs&nbsp;to&nbsp;be&nbsp;temporarily&nbsp;frozen<br>
+is_decoder&nbsp;:&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Boolean&nbsp;value&nbsp;indicating&nbsp;if&nbsp;the&nbsp;layer&nbsp;needs&nbsp;to&nbsp;serve&nbsp;as&nbsp;an&nbsp;encoder&nbsp;or&nbsp;a&nbsp;decoder<br>
+Returns<br>
+-------<br>
+Tensor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Created&nbsp;layer</tt></dd></dl>
+
+<dl><dt><a name="Autoencoder-create_weights"><strong>create_weights</strong></a>(self, prev_count, curr_count)</dt><dd><tt>Creates&nbsp;weights&nbsp;for&nbsp;a&nbsp;layer<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+prev_count&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Neuron&nbsp;count&nbsp;of&nbsp;the&nbsp;previous&nbsp;layer<br>
+curr_count&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Neuron&nbsp;count&nbsp;of&nbsp;the&nbsp;current&nbsp;layer</tt></dd></dl>
+
+<dl><dt><a name="Autoencoder-get_variables_to_init"><strong>get_variables_to_init</strong></a>(self, n)</dt><dd><tt>Creates&nbsp;a&nbsp;list&nbsp;of&nbsp;variables&nbsp;that&nbsp;need&nbsp;to&nbsp;be&nbsp;currently&nbsp;initialized<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+n&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Layer&nbsp;index<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+list&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Returns&nbsp;a&nbsp;list&nbsp;of&nbsp;tensorflow.Variable&nbsp;objects&nbsp;that&nbsp;neeed&nbsp;to&nbsp;be&nbsp;intialized&nbsp;during&nbsp;this&nbsp;step</tt></dd></dl>
+
+<dl><dt><a name="Autoencoder-prepare_session"><strong>prepare_session</strong></a>(self)</dt><dd><tt>Prepares&nbsp;a&nbsp;new&nbsp;session&nbsp;for&nbsp;the&nbsp;model<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a></tt></dd></dl>
+
+<dl><dt><a name="Autoencoder-pretrain"><strong>pretrain</strong></a>(self, learning_rate, i, it, data, ep, summary_path, optimizer_class<font color="#909090">=&lt;class 'tensorflow.python.training.rmsprop.RMSPropOptimizer'&gt;</font>, m<font color="#909090">=0.2</font>, decay<font color="#909090">=0.9</font>)</dt><dd><tt>Pretrains&nbsp;one&nbsp;layer&nbsp;with&nbsp;specified&nbsp;parameters<br>
+Please&nbsp;remember&nbsp;that&nbsp;the&nbsp;summary_path&nbsp;must&nbsp;contain&nbsp;one&nbsp;argument&nbsp;for&nbsp;formatting<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+learning_rate&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Learning&nbsp;rate&nbsp;for&nbsp;the&nbsp;optimizer<br>
+i&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Layer&nbsp;index<br>
+it&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Number&nbsp;of&nbsp;iterations&nbsp;used<br>
+data&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;numpy&nbsp;arrays&nbsp;feed&nbsp;to&nbsp;the&nbsp;input&nbsp;placeholder&nbsp;used&nbsp;for&nbsp;training<br>
+ep&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;If&nbsp;it&nbsp;is&nbsp;0,&nbsp;then&nbsp;the&nbsp;training&nbsp;will&nbsp;be&nbsp;executed&nbsp;until&nbsp;the&nbsp;error&nbsp;value&nbsp;is&nbsp;larger&nbsp;than&nbsp;ep<br>
+summary_path&nbsp;:&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Path&nbsp;used&nbsp;to&nbsp;store&nbsp;Tensorflow&nbsp;summaries&nbsp;generated&nbsp;by&nbsp;the&nbsp;model&nbsp;during&nbsp;training<br>
+optimizer_class&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Optimized&nbsp;class&nbsp;used&nbsp;during&nbsp;pretraining<br>
+m&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Momentum<br>
+decay&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Learning&nbsp;rate&nbsp;decay</tt></dd></dl>
+
+<hr>
+Data descriptors defined here:<br>
+<dl><dt><strong>session</strong></dt>
+<dd><tt>Model's&nbsp;Tensorflow&nbsp;session<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;Autoencoder<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+tensorflow.Session&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Session&nbsp;currently&nbsp;used&nbsp;by&nbsp;the&nbsp;model</tt></dd>
+</dl>
+<hr>
+Methods inherited from <a href="models.html#Model">Model</a>:<br>
+<dl><dt><a name="Autoencoder-cross_entropy_loss"><strong>cross_entropy_loss</strong></a>(pred, actual)</dt><dd><tt>Cross&nbsp;Entropy&nbsp;loss&nbsp;function&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+pred&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;network's&nbsp;output&nbsp;<br>
+actual&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;desired&nbsp;output<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Tensor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;used&nbsp;to&nbsp;calculate&nbsp;the&nbsp;error's&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Autoencoder-direct_error"><strong>direct_error</strong></a>(pred, actual)</dt><dd><tt>Direct&nbsp;loss&nbsp;function&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+pred&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;network's&nbsp;output&nbsp;<br>
+actual&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;desired&nbsp;output<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Tensor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;used&nbsp;to&nbsp;calculate&nbsp;the&nbsp;error's&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Autoencoder-initialize_optimizer"><strong>initialize_optimizer</strong></a>(opt, vars)</dt><dd><tt>Initializes&nbsp;all&nbsp;optimizer&nbsp;slots<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+opt&nbsp;:&nbsp;Optimizer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Optimizer&nbsp;that&nbsp;needs&nbsp;initialization<br>
+vars&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Variables&nbsp;used<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Operation&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Initialization&nbsp;operation</tt></dd></dl>
+
+<dl><dt><a name="Autoencoder-mse_loss"><strong>mse_loss</strong></a>(pred, actual)</dt><dd><tt>Mean&nbsp;Squared&nbsp;Error&nbsp;loss&nbsp;function&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+pred&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;network's&nbsp;output&nbsp;<br>
+actual&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;desired&nbsp;output<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Tensor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;used&nbsp;to&nbsp;calculate&nbsp;the&nbsp;error's&nbsp;value</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Classifier">class <strong>Classifier</strong></a>(<a href="models.html#Model">Model</a>)</font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Class&nbsp;used&nbsp;to&nbsp;append&nbsp;a&nbsp;classifier&nbsp;to&nbsp;a&nbsp;pretrained&nbsp;autoencoder<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Classifier-__init__"><strong>__init__</strong></a>(self, autoencoder, outputs)</dt><dd><tt>Class&nbsp;constructor<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Classifier">Classifier</a>&nbsp;<br>
+autoencoder&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;The&nbsp;autoencoder&nbsp;object&nbsp;to&nbsp;which&nbsp;the&nbsp;classifier&nbsp;will&nbsp;be&nbsp;appended&nbsp;to</tt></dd></dl>
+
+<dl><dt><a name="Classifier-multi_batch_test"><strong>multi_batch_test</strong></a>(self, suits, data_batches, outputs_batches, batch_count)</dt><dd><tt>Multibatch&nbsp;testing&nbsp;method<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;aggregates&nbsp;the&nbsp;results&nbsp;for&nbsp;several&nbsp;batches.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Classifier">Classifier</a>&nbsp;<br>
+suits&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Number&nbsp;of&nbsp;suits<br>
+data_batches&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;input&nbsp;data&nbsp;batches<br>
+outputs_batches&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;output&nbsp;data&nbsp;batches<br>
+batch_count&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Number&nbsp;of&nbsp;batches</tt></dd></dl>
+
+<dl><dt><a name="Classifier-restore_model"><strong>restore_model</strong></a>(self, name)</dt><dd><tt>Restore&nbsp;method<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;restores&nbsp;a&nbsp;before&nbsp;saved&nbsp;model&nbsp;(including&nbsp;the&nbsp;autoencoder&nbsp;it&nbsp;contains)&nbsp;from&nbsp;permament&nbsp;memory.&nbsp;<br>
+Please&nbsp;remember&nbsp;to&nbsp;setup&nbsp;as&nbsp;instance&nbsp;of&nbsp;the&nbsp;<a href="#Classifier">Classifier</a>&nbsp;and&nbsp;<a href="#Autoencoder">Autoencoder</a>&nbsp;classes&nbsp;before&nbsp;running&nbsp;it,&nbsp;as&nbsp;well<br>
+as&nbsp;starting&nbsp;a&nbsp;Tensorflow&nbsp;session.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Classifier">Classifier</a>&nbsp;<br>
+name&nbsp;:&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Model">Model</a>&nbsp;filename</tt></dd></dl>
+
+<dl><dt><a name="Classifier-save_model"><strong>save_model</strong></a>(self, name)</dt><dd><tt>Save&nbsp;method<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;stores&nbsp;the&nbsp;current&nbsp;model&nbsp;(including&nbsp;the&nbsp;autoencoder&nbsp;it&nbsp;contains)&nbsp;on&nbsp;permament&nbsp;memory&nbsp;<br>
+under&nbsp;the&nbsp;location&nbsp;./name&nbsp;.<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Classifier">Classifier</a>&nbsp;<br>
+name&nbsp;:&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#Model">Model</a>&nbsp;filename<br>
+test_labels&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;numpy&nbsp;arrays&nbsp;with&nbsp;labels&nbsp;for&nbsp;the&nbsp;corresponding&nbsp;training&nbsp;inputs<br>
+suits&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;number&nbsp;indicating&nbsp;the&nbsp;number&nbsp;of&nbsp;suits&nbsp;in&nbsp;the&nbsp;input&nbsp;data</tt></dd></dl>
+
+<dl><dt><a name="Classifier-suit_based_accurancy"><strong>suit_based_accurancy</strong></a>(self, test_data, test_labels, suits)</dt><dd><tt>Advanced&nbsp;testing&nbsp;method<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;obtain&nbsp;the&nbsp;accurancy&nbsp;of&nbsp;the&nbsp;created&nbsp;model&nbsp;including&nbsp;information&nbsp;such&nbsp;as:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Exact&nbsp;deal&nbsp;match&nbsp;percentage<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Actual&nbsp;deal&nbsp;missed&nbsp;by&nbsp;1&nbsp;percentage<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Actual&nbsp;deal&nbsp;missed&nbsp;by&nbsp;2&nbsp;percentage<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;the&nbsp;extended&nbsp;version&nbsp;of&nbsp;the&nbsp;test&nbsp;method,&nbsp;as&nbsp;it&nbsp;calculates&nbsp;the&nbsp;above&nbsp;mentioned&nbsp;values&nbsp;separately<br>
+for&nbsp;every&nbsp;suit&nbsp;i.e.&nbsp;separately&nbsp;for&nbsp;No&nbsp;Trump,&nbsp;Diamonds&nbsp;Trump,&nbsp;Hearts&nbsp;Trump,&nbsp;Spades&nbsp;Trump&nbsp;and&nbsp;Clubs&nbsp;Trump&nbsp;games.&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Classifier">Classifier</a>&nbsp;<br>
+test_data&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;numpy&nbsp;arrays&nbsp;with&nbsp;training&nbsp;inputs&nbsp;which&nbsp;will&nbsp;be&nbsp;fed&nbsp;to&nbsp;the&nbsp;input&nbsp;placeholder<br>
+test_labels&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;numpy&nbsp;arrays&nbsp;with&nbsp;labels&nbsp;for&nbsp;the&nbsp;corresponding&nbsp;training&nbsp;inputs<br>
+suits&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;number&nbsp;indicating&nbsp;the&nbsp;number&nbsp;of&nbsp;suits&nbsp;in&nbsp;the&nbsp;input&nbsp;data&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;results&nbsp;for&nbsp;each&nbsp;suit</tt></dd></dl>
+
+<dl><dt><a name="Classifier-test"><strong>test</strong></a>(self, data, desired_output)</dt><dd><tt>Test&nbsp;method<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;obtain&nbsp;the&nbsp;accurancy&nbsp;of&nbsp;the&nbsp;created&nbsp;model&nbsp;including&nbsp;information&nbsp;such&nbsp;as:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Exact&nbsp;deal&nbsp;match&nbsp;percentage<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Actual&nbsp;deal&nbsp;missed&nbsp;by&nbsp;1&nbsp;percentage<br>
+&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;Actual&nbsp;deal&nbsp;missed&nbsp;by&nbsp;2&nbsp;percentage<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Classifier">Classifier</a>&nbsp;<br>
+data&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;numpy&nbsp;arrays&nbsp;with&nbsp;training&nbsp;inputs&nbsp;which&nbsp;will&nbsp;be&nbsp;fed&nbsp;to&nbsp;the&nbsp;input&nbsp;placeholder<br>
+desired_output&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;numpy&nbsp;arrays&nbsp;with&nbsp;labels&nbsp;for&nbsp;the&nbsp;corresponding&nbsp;training&nbsp;inputs<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+Returns<br>
+-------<br>
+Detailed&nbsp;accurancy&nbsp;concerning&nbsp;the&nbsp;current&nbsp;model</tt></dd></dl>
+
+<dl><dt><a name="Classifier-train"><strong>train</strong></a>(self, data, desired_output, learning_rate, it, path, loss_f<font color="#909090">=&lt;unbound method Model.mse_loss&gt;</font>)</dt><dd><tt>Main&nbsp;train&nbsp;method<br>
+&nbsp;<br>
+This&nbsp;method&nbsp;is&nbsp;used&nbsp;to&nbsp;start&nbsp;the&nbsp;fine&nbsp;tuning&nbsp;phase&nbsp;of&nbsp;the&nbsp;classifier&nbsp;and&nbsp;the&nbsp;autoencoder&nbsp;layers<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+self&nbsp;:&nbsp;<a href="#Classifier">Classifier</a>&nbsp;<br>
+data&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;numpy&nbsp;arrays&nbsp;with&nbsp;training&nbsp;inputs&nbsp;which&nbsp;will&nbsp;be&nbsp;fed&nbsp;to&nbsp;the&nbsp;input&nbsp;placeholder<br>
+desired_output&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;numpy&nbsp;arrays&nbsp;with&nbsp;labels&nbsp;for&nbsp;the&nbsp;corresponding&nbsp;training&nbsp;inputs<br>
+learning_rate&nbsp;:&nbsp;float<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Learning&nbsp;rate&nbsp;for&nbsp;the&nbsp;optimizer&nbsp;used<br>
+it&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Iterations&nbsp;count&nbsp;to&nbsp;be&nbsp;executed<br>
+path&nbsp;:&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Path&nbsp;used&nbsp;to&nbsp;store&nbsp;summaries&nbsp;generated&nbsp;by&nbsp;Tensorflow<br>
+loss_f&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Loss&nbsp;function&nbsp;used&nbsp;by&nbsp;the&nbsp;optimizer</tt></dd></dl>
+
+<hr>
+Methods inherited from <a href="models.html#Model">Model</a>:<br>
+<dl><dt><a name="Classifier-cross_entropy_loss"><strong>cross_entropy_loss</strong></a>(pred, actual)</dt><dd><tt>Cross&nbsp;Entropy&nbsp;loss&nbsp;function&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+pred&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;network's&nbsp;output&nbsp;<br>
+actual&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;desired&nbsp;output<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Tensor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;used&nbsp;to&nbsp;calculate&nbsp;the&nbsp;error's&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Classifier-direct_error"><strong>direct_error</strong></a>(pred, actual)</dt><dd><tt>Direct&nbsp;loss&nbsp;function&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+pred&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;network's&nbsp;output&nbsp;<br>
+actual&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;desired&nbsp;output<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Tensor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;used&nbsp;to&nbsp;calculate&nbsp;the&nbsp;error's&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Classifier-initialize_optimizer"><strong>initialize_optimizer</strong></a>(opt, vars)</dt><dd><tt>Initializes&nbsp;all&nbsp;optimizer&nbsp;slots<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+opt&nbsp;:&nbsp;Optimizer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Optimizer&nbsp;that&nbsp;needs&nbsp;initialization<br>
+vars&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Variables&nbsp;used<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Operation&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Initialization&nbsp;operation</tt></dd></dl>
+
+<dl><dt><a name="Classifier-mse_loss"><strong>mse_loss</strong></a>(pred, actual)</dt><dd><tt>Mean&nbsp;Squared&nbsp;Error&nbsp;loss&nbsp;function&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+pred&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;network's&nbsp;output&nbsp;<br>
+actual&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;desired&nbsp;output<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Tensor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;used&nbsp;to&nbsp;calculate&nbsp;the&nbsp;error's&nbsp;value</tt></dd></dl>
+
+</td></tr></table> <p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><a name="Model">class <strong>Model</strong></a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>Base&nbsp;class&nbsp;for&nbsp;models&nbsp;containing&nbsp;static&nbsp;methods<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="Model-cross_entropy_loss"><strong>cross_entropy_loss</strong></a>(pred, actual)</dt><dd><tt>Cross&nbsp;Entropy&nbsp;loss&nbsp;function&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+pred&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;network's&nbsp;output&nbsp;<br>
+actual&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;desired&nbsp;output<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Tensor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;used&nbsp;to&nbsp;calculate&nbsp;the&nbsp;error's&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Model-direct_error"><strong>direct_error</strong></a>(pred, actual)</dt><dd><tt>Direct&nbsp;loss&nbsp;function&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+pred&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;network's&nbsp;output&nbsp;<br>
+actual&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;desired&nbsp;output<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Tensor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;used&nbsp;to&nbsp;calculate&nbsp;the&nbsp;error's&nbsp;value</tt></dd></dl>
+
+<dl><dt><a name="Model-initialize_optimizer"><strong>initialize_optimizer</strong></a>(opt, vars)</dt><dd><tt>Initializes&nbsp;all&nbsp;optimizer&nbsp;slots<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+opt&nbsp;:&nbsp;Optimizer<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Optimizer&nbsp;that&nbsp;needs&nbsp;initialization<br>
+vars&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Variables&nbsp;used<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Operation&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Initialization&nbsp;operation</tt></dd></dl>
+
+<dl><dt><a name="Model-mse_loss"><strong>mse_loss</strong></a>(pred, actual)</dt><dd><tt>Mean&nbsp;Squared&nbsp;Error&nbsp;loss&nbsp;function&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+pred&nbsp;:&nbsp;Tensor<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;network's&nbsp;output&nbsp;<br>
+actual&nbsp;:&nbsp;<a href="#Autoencoder">Autoencoder</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;containing&nbsp;the&nbsp;desired&nbsp;output<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+Tensor&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tensor&nbsp;used&nbsp;to&nbsp;calculate&nbsp;the&nbsp;error's&nbsp;value</tt></dd></dl>
+
+</td></tr></table></td></tr></table>
+</body></html>

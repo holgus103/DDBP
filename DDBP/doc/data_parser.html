@@ -1,0 +1,113 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: module data_parser</title>
+<meta charset="utf-8">
+</head><body bgcolor="#f0f0f8">
+
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="heading">
+<tr bgcolor="#7799ee">
+<td valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial">&nbsp;<br><big><big><strong>data_parser</strong></big></big></font></td
+><td align=right valign=bottom
+><font color="#ffffff" face="helvetica, arial"><a href=".">index</a><br><a href="file:/home/holgus103/Projects/DDBP/DDBP/data_parser.py">/home/holgus103/Projects/DDBP/DDBP/data_parser.py</a></font></td></tr></table>
+    <p></p>
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#aa55cc">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Modules</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#aa55cc"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><table width="100%" summary="list"><tr><td width="25%" valign=top><a href="numpy.html">numpy</a><br>
+</td><td width="25%" valign=top><a href="random.html">random</a><br>
+</td><td width="25%" valign=top><a href="re.html">re</a><br>
+</td><td width="25%" valign=top><a href="tensorflow.html">tensorflow</a><br>
+</td></tr></table></td></tr></table><p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#eeaa77">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#ffffff" face="helvetica, arial"><big><strong>Functions</strong></big></font></td></tr>
+    
+<tr><td bgcolor="#eeaa77"><tt>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</tt></td><td>&nbsp;</td>
+<td width="100%"><dl><dt><a name="-combine_data_sets"><strong>combine_data_sets</strong></a>(data_sets, output_sets)</dt><dd><tt>Function&nbsp;used&nbsp;to&nbsp;flatmap&nbsp;a&nbsp;lists&nbsp;of&nbsp;lists<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+data_sets&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;lists&nbsp;containing&nbsp;network&nbsp;inputs<br>
+output_sets&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;lists&nbsp;containing&nbsp;desired&nbsp;network&nbsp;outputs<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(list,&nbsp;list)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tuple&nbsp;of&nbsp;lists&nbsp;containing&nbsp;a&nbsp;set&nbsp;of&nbsp;generated&nbsp;inputs&nbsp;and&nbsp;a&nbsp;set&nbsp;of&nbsp;corresponding&nbsp;outputs</tt></dd></dl>
+ <dl><dt><a name="-divide_into_batches"><strong>divide_into_batches</strong></a>(batch_count, data_batches, outputs_batches, data, outputs)</dt><dd><tt>Divides&nbsp;data&nbsp;into&nbsp;batches<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+batch_count&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Number&nbsp;of&nbsp;batches<br>
+data_batches&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;input&nbsp;data&nbsp;batches<br>
+outputs_batches&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;output&nbsp;data&nbsp;batches<br>
+data&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;All&nbsp;input&nbsp;data&nbsp;to&nbsp;be&nbsp;divided&nbsp;<br>
+outputs&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Output&nbsp;data&nbsp;to&nbsp;be&nbsp;batched</tt></dd></dl>
+ <dl><dt><a name="-parse"><strong>parse</strong></a>(input, no_trump, trump)</dt><dd><tt>Parse&nbsp;function&nbsp;used&nbsp;to&nbsp;process&nbsp;one&nbsp;line<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+input&nbsp;:&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;deal&nbsp;encoded&nbsp;in&nbsp;the&nbsp;format&nbsp;specified&nbsp;above<br>
+no_trump&nbsp;:&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Boolean&nbsp;value&nbsp;indicating&nbsp;whether&nbsp;No&nbsp;Trump&nbsp;games&nbsp;are&nbsp;to&nbsp;be&nbsp;skipped&nbsp;or&nbsp;not<br>
+trump&nbsp;:&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Boolean&nbsp;value&nbsp;indicating&nbsp;whether&nbsp;Trump&nbsp;games&nbsp;are&nbsp;to&nbsp;be&nbsp;skipped&nbsp;or&nbsp;not<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(list,&nbsp;list)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tuple&nbsp;of&nbsp;lists&nbsp;containing&nbsp;a&nbsp;set&nbsp;of&nbsp;generated&nbsp;inputs&nbsp;and&nbsp;a&nbsp;set&nbsp;of&nbsp;corresponding&nbsp;outputs</tt></dd></dl>
+ <dl><dt><a name="-process_player"><strong>process_player</strong></a>(cards)</dt><dd><tt>Parse&nbsp;function&nbsp;used&nbsp;to&nbsp;process&nbsp;one&nbsp;players&nbsp;hand<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+cards&nbsp;:&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;A&nbsp;hand&nbsp;encoded&nbsp;in&nbsp;the&nbsp;aforementioned&nbsp;format<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+numpy.array<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Numpy&nbsp;array&nbsp;containing&nbsp;the&nbsp;encoded&nbsp;input</tt></dd></dl>
+ <dl><dt><a name="-read_file"><strong>read_file</strong></a>(path, lines_count, shuffle<font color="#909090">=False</font>, no_trump<font color="#909090">=True</font>, trump<font color="#909090">=True</font>)</dt><dd><tt>Function&nbsp;responsible&nbsp;for&nbsp;reading&nbsp;a&nbsp;whole&nbsp;file&nbsp;and&nbsp;generating&nbsp;datasets&nbsp;<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+path&nbsp;:&nbsp;string<br>
+&nbsp;&nbsp;&nbsp;&nbsp;File&nbsp;path<br>
+lines_count&nbsp;:&nbsp;int<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Max&nbsp;lines&nbsp;count&nbsp;to&nbsp;be&nbsp;read<br>
+shuffle&nbsp;:&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Boolean&nbsp;value&nbsp;indicating&nbsp;whether&nbsp;the&nbsp;lines&nbsp;are&nbsp;to&nbsp;be&nbsp;shuffled<br>
+no_trump&nbsp;:&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Boolean&nbsp;value&nbsp;indicating&nbsp;whether&nbsp;No&nbsp;Trump&nbsp;deals&nbsp;are&nbsp;to&nbsp;be&nbsp;skipped<br>
+trump&nbsp;:&nbsp;bool<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Boolean&nbsp;value&nbsp;indicating&nbsp;whether&nbsp;Trump&nbsp;deals&nbsp;are&nbsp;to&nbsp;be&nbsp;skipped<br>
+&nbsp;<br>
+Returns<br>
+-------<br>
+(list,&nbsp;list)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;Tuple&nbsp;of&nbsp;lists&nbsp;containing&nbsp;a&nbsp;set&nbsp;of&nbsp;generated&nbsp;inputs&nbsp;and&nbsp;a&nbsp;set&nbsp;of&nbsp;corresponding&nbsp;outputs</tt></dd></dl>
+ <dl><dt><a name="-save_as_tfrecord"><strong>save_as_tfrecord</strong></a>(data, output, name)</dt><dd><tt>Function&nbsp;used&nbsp;to&nbsp;save&nbsp;a&nbsp;dataset&nbsp;as&nbsp;a&nbsp;TFRecord<br>
+&nbsp;<br>
+Parameters<br>
+----------<br>
+data&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;network&nbsp;inputs<br>
+output&nbsp;:&nbsp;list<br>
+&nbsp;&nbsp;&nbsp;&nbsp;List&nbsp;of&nbsp;containing&nbsp;desired&nbsp;network&nbsp;outputs</tt></dd></dl>
+</td></tr></table>
+</body></html>
