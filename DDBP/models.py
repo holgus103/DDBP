@@ -421,9 +421,40 @@ class Classifier(Model):
         self.biases = tf.Variable(tf.random_normal([outputs]));
         self.layer = tf.nn.softmax(tf.matmul(input, self.weights) + self.biases);
         self.output_placeholder = tf.placeholder("float", [None, outputs]);
+        self.get_accuracy_tensors();
         
+    def create_train_summary(self, data, output, test_data, test_output, train_suits, test_suits):
+        def add_values_for_whole_set(s, set_name, results):
+            s.value.add(tag="{0} acc - exact".format(set_name), simple_value=results[0])
+            s.value.add(tag="{0} acc - off by 1".format(set_name), simple_value=results[1])
+            s.value.add(tag="{0} acc - off by 2".format(set_name), simple_value=results[2])
 
-    def train(self, data, desired_output, learning_rate, it, delta, path, test_data, test_output, loss_f = Model.mse_loss, no_improvement = 5):
+        def add_suit_values_for_set(s, set_name, results, suits):
+            initial = 0;
+            if suits != 4:
+                add_values_for_whole_set(s, "No trump - {0}".format(set_name), results[0]);
+                initial = 1;
+
+            if suits != 1:
+                add_values_for_whole_set(s, "Spades - {0}".format(set_name), results[initial]);
+                add_values_for_whole_set(s, "Hearts - {0}".format(set_name), results[initial + 1]);
+                add_values_for_whole_set(s, "Diamonds - {0}".format(set_name), results[initial + 2]);
+                add_values_for_whole_set(s, "Clubs - {0}".format(set_name), results[initial + 3]);
+
+        s = tf.Summary();
+        r_tr = self.test(data, output);
+        r_test = self.test(test_data, test_output);
+        suits_tr = self.suit_based_accurancy(data, output, train_suits);
+        suits_test = self.suit_based_accurancy(test_data, test_output, test_suits);
+        # save accuracy for whole sets
+        add_values_for_whole_set(s, "Train", r_tr);
+        add_values_for_whole_set(s, "Test", r_test);
+        # save accuracy for suits
+        add_suit_values_for_set(s, "Train", suits_tr, train_suits);
+        add_suit_values_for_set(s, "Test", suits_test, test_suits);
+        return s;
+
+    def train(self, data, desired_output, learning_rate, it, delta, path, train_data, train_output, test_data, test_output, train_suits = 5, test_suits = 5, loss_f = Model.mse_loss, no_improvement = 5):
         """
         Main train method
     
@@ -463,11 +494,7 @@ class Classifier(Model):
         hist_summaries = [(self.autoencoder.weights[i], 'weights{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))];
         hist_summaries.extend([(self.autoencoder.biases[i], 'biases{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))]);
         summaries = [tf.summary.histogram(v[1], v[0]) for v in hist_summaries];
-        (a0, a1, a2) = self,get_accuracy_tensors(test_data, test_output);
         summaries.append(tf.summary.scalar("loss_4", loss));   
-        summaries.append(tf.summary.scalar("Exact accuracy", a0));
-        summaries.append(tf.summary.scalar("Accuracy with off by 1", a1));
-        summaries.append(tf.summary.scalar("Accuracy with off by 2", a2));
         summary_op = tf.summary.merge(summaries);
 
         writer = tf.summary.FileWriter(path, graph=self.autoencoder.session.graph)
@@ -480,8 +507,10 @@ class Classifier(Model):
                 for k in range(0, len(data)):
                     lval, _, summary = self.autoencoder.session.run([loss, optimizer, summary_op], feed_dict={self.input_placeholder: data[k], self.output_placeholder: desired_output[k]});
                 if it_counter % 100 == 0:
+                    s = self.create_train_summary(train_data, train_output, test_data, test_output, train_suits, test_suits);
                     print("finetuning - it {0} - lval {1}".format(it_counter, lval));
                     writer.add_summary(summary, it_counter);
+                    writer.add_summary(s, it_counter);
                     if prev_val != 0 and (prev_val - lval) < delta:
                         if(no_improvement_counter > no_improvement):
                             print("terminating due to no improvement");
@@ -500,7 +529,7 @@ class Classifier(Model):
                     print("finetuning - it {0} - lval {1}".format(i, lval));
                     writer.add_summary(summary, i);
 
-    def get_accuracy_tensors(self, data, output):
+    def get_accuracy_tensors(self):
         """
         Method used to set up tensors holding accuracy values
 
@@ -521,10 +550,10 @@ class Classifier(Model):
         missed_by_one = tf.less_equal(tf.abs(tf.argmax(self.layer, 1) - tf.argmax(self.output_placeholder, 1)), 1);
         missed_by_two = tf.less_equal(tf.abs(tf.argmax(self.layer, 1) - tf.argmax(self.output_placeholder, 1)), 2);
 
-        accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
-        accuracy_missed_by_one = tf.reduce_mean(tf.cast(missed_by_one, "float"))
-        accuracy_missed_by_two = tf.reduce_mean(tf.cast(missed_by_two, "float"))
-        return (a0, a1, a2);
+        self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+        self.accuracy_missed_by_one = tf.reduce_mean(tf.cast(missed_by_one, "float"))
+        self.accuracy_missed_by_two = tf.reduce_mean(tf.cast(missed_by_two, "float"))
+        return (self.accuracy, self.accuracy_missed_by_one, self.accuracy_missed_by_two);
         
     def test(self, data, desired_output):
         """
@@ -547,8 +576,7 @@ class Classifier(Model):
         -------
         Detailed accurancy concerning the current model
         """
-        (accuracy, accuracy_missed_by_one, accuracy_missed_by_two) = self.get_accuracy_tensors(data, desired_output); 
-        return self.autoencoder.session.run([accuracy, accuracy_missed_by_one, accuracy_missed_by_two], feed_dict={self.input_placeholder: data, self.output_placeholder: desired_output});
+        return self.autoencoder.session.run([self.accuracy, self.accuracy_missed_by_one, self.accuracy_missed_by_two], feed_dict={self.input_placeholder: data, self.output_placeholder: desired_output});
 
     def suit_based_accurancy(self, test_data, test_labels, suits):
         """
