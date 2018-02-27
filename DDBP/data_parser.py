@@ -144,8 +144,8 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
 
     Returns
     -------
-    (list, list)
-        Tuple of lists containing a set of generated inputs and a set of corresponding outputs
+    (list, list, list, list)
+        Tuple of lists containing a set of generated inputs and a set of corresponding outputs (training and test data)
 
     """
     def process(data_set, outputs_set, line, no_trump, trump):
@@ -153,8 +153,11 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
         data_set.append(data)
         outputs_set.append(outputs)
 
+    test_end = int(lines_count * 0.66);
     data_set = []
     outputs_set = []
+    test_set = []
+    test_outputs_set = []
     line_number = 1
     lines = [];
     with open(path, "r") as file:
@@ -167,7 +170,10 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
             else:
                 if line_number % 100  == 0:
                     print("Reading line {0}".format(line_number));
-                process(data_set, outputs_set, line, no_trump, trump);
+                if line_number < test_end:
+                    process(data_set, outputs_set, line, no_trump, trump);
+                else:
+                    process(test_set, test_outputs_set, line, True, True);
             #data_set = data_set + data;
             #outputs_set = outputs_set + outputs;
             line_number = line_number + 1
@@ -177,9 +183,12 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
         for line in lines:
             if line_number % 100  == 0:
                 print("Reading line {0}".format(line_number));
-            process(data_set, outputs_set, line, no_trump, trump);
+            if line_number < test_end:
+                process(data_set, outputs_set, line, no_trump, trump);
+            else:
+                process(test_set, test_outputs_set, line, True, True);
             line_number = line_number + 1;
-    return combine_data_sets(data_set, outputs_set)
+    return combine_data_sets(data_set, outputs_set) + combine_data_sets(test_set, test_outputs_set);
 
 def combine_data_sets(data_sets, output_sets):
     """
