@@ -275,7 +275,10 @@ class Autoencoder(Model):
         step = tf.Variable(0, name='global_step', trainable=False);
         net = self.build_pretrain_net(i, input);
         loss_function = self.loss(net[len(net) - 1], input);
-        opt = optimizer_class(learning_rate, momentum = m);
+        if(optimizer_class is tf.train.GradientDescentOptimizer):
+            opt = optimizer_class(learning_rate);
+        else:
+            opt = optimizer_class(learning_rate, momentum = m);
         optimizer = opt.minimize(loss_function, global_step=step);    
         vars = self.get_variables_to_init(i);
         vars.append(step);
