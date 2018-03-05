@@ -1,9 +1,12 @@
 /DDBP/graphs/
 /DDBP/summaries/
 /DDBP/models/
-/DDBP/run/models/
-/DDBP/run/summaries/
+/DDBP/run/
+/DDBP/run/
 *.suo
 *.pyc
 *.htm
 *.zip
+*.deb
+*.run
+/DDBP/data
