@@ -12,13 +12,13 @@ sys.path.append("./../");
 import models;
 import data_parser as dp;
 
-experiment_name = "no_trump_1.1_rms_50k";
+experiment_name = "shallow174_no_trump_100k";
 path = "./summaries/{0}/".format(experiment_name);
 
 dp.initialize_random(experiment_name);
 
 # import data
-(data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", 50000, True, True, True);
+(data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", 100000, True, True, False);
 
 d_train = dp.get_distribution(data, outputs);
 d_test = dp.get_distribution(test_data, test_outputs);
@@ -45,15 +45,12 @@ outputs_batches.append(outputs[(batch_count - 1) * batch_size : l]);
 print(len(data_batches[0]))
 #print(len(data_batches[1]))
 # create autoencoder
-a = models.Autoencoder(217, [197, 179, 162, 147], models.Model.cross_entropy_loss);
-#a = models.Autoencoder(217, [174, 140, 112, 90], models.Model.cross_entropy_loss);
+# a = models.Autoencoder(217, [197, 179, 162, 147], models.Model.cross_entropy_loss);
+a = models.Autoencoder(217, [54], models.Model.cross_entropy_loss);
 
 
 # pretrain each layer
 a.pretrain(0.001, 0, 7000, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
-a.pretrain(0.0005, 1, 8500, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
-a.pretrain(0.0001, 2, 10000, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
-a.pretrain(0.0001, 3, 12500, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
 
 # create classifier
 c = models.Classifier(a, 14);
