@@ -151,7 +151,7 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
         Tuple of lists containing a set of generated inputs and a set of corresponding outputs (training and test data)
 
     """
-    def process(data_set, outputs_set, line, no_trump, trump):
+    def process(data_set, outputs_set, line, no_trump, trump, no_trump_test = True, trump_test = True):
         data, outputs = parse(line, no_trump, trump);
         data_set.append(data)
         outputs_set.append(outputs)
@@ -176,7 +176,7 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
                 if line_number < test_end:
                     process(data_set, outputs_set, line, no_trump, trump);
                 else:
-                    process(test_set, test_outputs_set, line, no_trump, trump);
+                    process(test_set, test_outputs_set, line, no_trump_test, trump_test);
             #data_set = data_set + data;
             #outputs_set = outputs_set + outputs;
             line_number = line_number + 1
@@ -189,7 +189,7 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
             if line_number < test_end:
                 process(data_set, outputs_set, line, no_trump, trump);
             else:
-                process(test_set, test_outputs_set, line, no_trump, trump);
+                process(test_set, test_outputs_set, line, no_trump_test, trump_test);
             line_number = line_number + 1;
     return combine_data_sets(data_set, outputs_set) + combine_data_sets(test_set, test_outputs_set);
 
