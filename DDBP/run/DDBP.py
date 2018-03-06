@@ -55,13 +55,13 @@ a.pretrain(0.001, 0, 7000, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2,
 # create classifier
 c = models.Classifier(a, 14);
 # train whole network
-c.train(data_batches, outputs_batches, 0.0001, 15000, 0.0001, path +"/finetuning", data, outputs, test_data, test_outputs, 5, 5, models.Model.mse_loss, 25);
+c.train(data_batches, outputs_batches, 0.0001, 15000, 0.0001, path +"/finetuning", data, outputs, test_data, test_outputs, 1, 1, models.Model.mse_loss, 25);
 
 # evaluate results
 print(c.test(data, outputs));
 print(c.test(test_data, test_outputs));
-print(c.suit_based_accurancy(data, outputs, 5));
-print(c.suit_based_accurancy(test_data, test_outputs, 5));
+print(c.suit_based_accurancy(data, outputs, 1));
+print(c.suit_based_accurancy(test_data, test_outputs, 1));
 c.save_model(experiment_name);
 
 
