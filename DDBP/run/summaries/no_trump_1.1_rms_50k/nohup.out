@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/runpy.py", line 184, in _run_module_as_main
+    "__main__", mod_spec)
+  File "/usr/lib/python3.5/runpy.py", line 85, in _run_code
+    exec(code, run_globals)
+  File "/home/holgus103/.local/lib/python3.5/site-packages/tensorboard/main.py", line 30, in <module>
+    from tensorboard import default
+  File "/home/holgus103/.local/lib/python3.5/site-packages/tensorboard/default.py", line 35, in <module>
+    from tensorboard.plugins.audio import audio_plugin
+  File "/home/holgus103/.local/lib/python3.5/site-packages/tensorboard/plugins/audio/audio_plugin.py", line 27, in <module>
+    from tensorboard import plugin_util
+  File "/home/holgus103/.local/lib/python3.5/site-packages/tensorboard/plugin_util.py", line 21, in <module>
+    import bleach
+  File "/home/holgus103/.local/lib/python3.5/site-packages/bleach/__init__.py", line 18, in <module>
+    from .encoding import force_unicode
+  File "/home/holgus103/.local/lib/python3.5/site-packages/bleach/encoding.py", line 2, in <module>
+    from decimal import Decimal
+  File "/usr/lib/python3.5/decimal.py", line 3, in <module>
+    from _decimal import *
+  File "/usr/lib/python3.5/abc.py", line 151, in register
+    def register(cls, subclass):
+KeyboardInterrupt
+TensorBoard 0.4.0rc3 at http://labaguette:6006 (Press CTRL+C to quit)

@@ -12,13 +12,13 @@ sys.path.append("./../");
 import models;
 import data_parser as dp;
 
-experiment_name = "no_trump_1.1_rms_250k";
+experiment_name = "no_trump_1.1_rms_50k";
 path = "./summaries/{0}/".format(experiment_name);
 
 dp.initialize_random(experiment_name);
 
 # import data
-(data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", 250000, True, True, False);
+(data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", 50000, True, True, True);
 
 d_train = dp.get_distribution(data, outputs);
 d_test = dp.get_distribution(test_data, test_outputs);
@@ -58,13 +58,13 @@ a.pretrain(0.0001, 3, 12500, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.
 # create classifier
 c = models.Classifier(a, 14);
 # train whole network
-c.train(data_batches, outputs_batches, 0.0001, 15000, 0.00001, path +"/finetuning", data, outputs, test_data, test_outputs, 1, 1, models.Model.mse_loss, 25);
+c.train(data_batches, outputs_batches, 0.0001, 15000, 0.0001, path +"/finetuning", data, outputs, test_data, test_outputs, 5, 5, models.Model.mse_loss, 25);
 
 # evaluate results
 print(c.test(data, outputs));
 print(c.test(test_data, test_outputs));
-print(c.suit_based_accurancy(data, outputs, 1));
-print(c.suit_based_accurancy(test_data, test_outputs, 1));
+print(c.suit_based_accurancy(data, outputs, 5));
+print(c.suit_based_accurancy(test_data, test_outputs, 5));
 c.save_model(experiment_name);
 
 
