@@ -12,7 +12,7 @@ sys.path.append("./../");
 import models;
 import data_parser as dp;
 
-experiment_name = "shallow174_no_trump_100k";
+experiment_name = "shallow54_no_trump_100k";
 path = "./summaries/{0}/".format(experiment_name);
 
 dp.initialize_random(experiment_name);
