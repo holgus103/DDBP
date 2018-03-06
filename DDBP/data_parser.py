@@ -128,7 +128,7 @@ def process_player(cards):
     # east, north, west, south
     return numpy.concatenate(tuple(p));
 
-def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True):
+def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True, no_trump_test = True, trump_test = True, split = 0.66):
     """
     Function responsible for reading a whole file and generating datasets 
 
@@ -151,7 +151,7 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
         Tuple of lists containing a set of generated inputs and a set of corresponding outputs (training and test data)
 
     """
-    def process(data_set, outputs_set, line, no_trump, trump, no_trump_test = True, trump_test = True, split = 0.66):
+    def process(data_set, outputs_set, line, no_trump, trump):
         data, outputs = parse(line, no_trump, trump);
         data_set.append(data)
         outputs_set.append(outputs)
