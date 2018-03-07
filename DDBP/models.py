@@ -517,7 +517,7 @@ class Classifier(Model):
                     print("finetuning - it {0} - lval {1}".format(it_counter, lval));
                     writer.add_summary(summary, it_counter);
                     writer.add_summary(s, it_counter);
-                    if prev_val != 0 and (current_val - prev_val) > delta:
+                    if prev_val != 0 and (current_val - prev_val) < delta:
                         if(no_improvement_counter > no_improvement):
                             print("terminating due to no improvement");
                             print("finetuning - it {0} - lval {1}".format(it_counter, lval));

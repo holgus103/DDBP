@@ -30,7 +30,7 @@ print(len(test_data));
 print(len(test_outputs))
 # calculate test set length
 l = len(data);
-batch_count = 1;
+batch_count = 4;
 data_batches = [];
 outputs_batches = [];
 

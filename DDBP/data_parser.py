@@ -302,3 +302,7 @@ def initialize_random(name):
     s = random.getstate();
     with open(name, 'wb') as f:
         pickle.dump(s, f);
+
+def reset_random(name):
+    file = open(name, "rb");
+    random.setstate(pickle.load(file));

@@ -1,0 +1,2 @@
+model_checkpoint_path: "shallow54_no_trump_100k"
+all_model_checkpoint_paths: "shallow54_no_trump_100k"
