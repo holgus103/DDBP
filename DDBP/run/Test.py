@@ -15,7 +15,8 @@ import data_parser as dp;
 experiment_name = "shallow174_no_trump_100k";
 path = "./summaries/{0}/".format(experiment_name);
 
-dp.initialize_random(experiment_name);
+
+dp.reset_random(experiment_name);
 
 # import data
 (data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", 200000, True, True, False, True, True, 0.5);
