@@ -128,7 +128,7 @@ def process_player(cards):
     # east, north, west, south
     return numpy.concatenate(tuple(p));
 
-def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True):
+def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True, no_trump_test = True, trump_test = True, split = 0.66):
     """
     Function responsible for reading a whole file and generating datasets 
 
@@ -156,7 +156,7 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
         data_set.append(data)
         outputs_set.append(outputs)
 
-    test_end = int(lines_count * 0.66);
+    test_end = int(lines_count * split);
     data_set = []
     outputs_set = []
     test_set = []
@@ -176,7 +176,7 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
                 if line_number < test_end:
                     process(data_set, outputs_set, line, no_trump, trump);
                 else:
-                    process(test_set, test_outputs_set, line, True, True);
+                    process(test_set, test_outputs_set, line, no_trump_test, trump_test);
             #data_set = data_set + data;
             #outputs_set = outputs_set + outputs;
             line_number = line_number + 1
@@ -189,7 +189,7 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True)
             if line_number < test_end:
                 process(data_set, outputs_set, line, no_trump, trump);
             else:
-                process(test_set, test_outputs_set, line, True, True);
+                process(test_set, test_outputs_set, line, no_trump_test, trump_test);
             line_number = line_number + 1;
     return combine_data_sets(data_set, outputs_set) + combine_data_sets(test_set, test_outputs_set);
 
@@ -302,3 +302,7 @@ def initialize_random(name):
     s = random.getstate();
     with open(name, 'wb') as f:
         pickle.dump(s, f);
+
+def reset_random(name):
+    file = open(name, "rb");
+    random.setstate(pickle.load(file));

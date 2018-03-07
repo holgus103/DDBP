@@ -457,7 +457,7 @@ class Classifier(Model):
         add_suit_values_for_set(s, "Test", suits_test, test_suits);
         return s;
 
-    def train(self, data, desired_output, learning_rate, it, delta, path, train_data, train_output, test_data, test_output, train_suits = 5, test_suits = 5, loss_f = Model.mse_loss, no_improvement = 5):
+    def train(self, data, desired_output, learning_rate, it, delta, path, train_data, train_output, test_data, test_output, train_suits = 5, test_suits = 5, loss_f = Model.mse_loss, no_improvement = 5, experiment_name = ""):
         """
         Main train method
     
@@ -504,6 +504,7 @@ class Classifier(Model):
 
         if delta > 0:
             prev_val = 0;
+            current_val = 0;
             no_improvement_counter = 0;
             it_counter = 0;
             while True:
@@ -511,17 +512,19 @@ class Classifier(Model):
                     lval, _, summary = self.autoencoder.session.run([loss, optimizer, summary_op], feed_dict={self.input_placeholder: data[k], self.output_placeholder: desired_output[k]});
                 if it_counter % 100 == 0:
                     s = self.create_train_summary(train_data, train_output, test_data, test_output, train_suits, test_suits);
+                    current_val = self.test(test_data, test_output)[0];
+                    self.save_model(experiment_name + " at {0}".format(it_counter))
                     print("finetuning - it {0} - lval {1}".format(it_counter, lval));
                     writer.add_summary(summary, it_counter);
                     writer.add_summary(s, it_counter);
-                    if prev_val != 0 and (prev_val - lval) < delta:
+                    if prev_val != 0 and (current_val - prev_val) < delta:
                         if(no_improvement_counter > no_improvement):
                             print("terminating due to no improvement");
                             print("finetuning - it {0} - lval {1}".format(it_counter, lval));
                             return
                         else:
                             no_improvement_counter = no_improvement_counter + 1;
-                    prev_val = lval;
+                    prev_val = current_val;
                 it_counter = it_counter + 1;
 
         else:
