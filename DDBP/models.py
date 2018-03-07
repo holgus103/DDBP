@@ -151,8 +151,8 @@ class Autoencoder(Model):
             Neuron count of the current layer
 
         """
-        w = tf.Variable(tf.random_normal([prev_count, curr_count]), trainable = True, name='v_W{0}'.format(curr_count));
-        b = tf.Variable(tf.random_normal([curr_count]), trainable = True, name='v_B{0}'.format(curr_count));
+        w = tf.Variable(tf.random_uniform([prev_count, curr_count]), trainable = True, name='v_W{0}'.format(curr_count));
+        b = tf.Variable(tf.random_uniform([curr_count]), trainable = True, name='v_B{0}'.format(curr_count));
         self.weights.append(w);
         self.biases.append(b);
         w_f = tf.Variable(tf.identity(w), trainable = False, name='f_W{0}'.format(curr_count));
@@ -160,7 +160,7 @@ class Autoencoder(Model):
         self.fixed_weights.append(w_f);
         self.fixed_biases.append(b_f);
         
-        b_out = tf.Variable(tf.random_normal([prev_count]), trainable = True, name='v_B_out{0}'.format(curr_count));
+        b_out = tf.Variable(tf.random_uniform([prev_count]), trainable = True, name='v_B_out{0}'.format(curr_count));
         b_out_fixed = tf.Variable(tf.identity(b_out), trainable = False, name='f_B_out{0}'.format(curr_count));
         self.out_biases.append(b_out);
         self.out_biases_fixed.append(b_out_fixed);

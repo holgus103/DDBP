@@ -10,12 +10,13 @@ import pprint;
 # configure here
 TEST_TRUMP = True
 TRAIN_TRUMP = False
-TEST_NO_TRUMP = False
+TEST_NO_TRUMP = True
 TRAIN_NO_TRUMP = True
-BATCHES = 1
-PARTITION = 0.66
-SET_SIZE = 1000
-EXPERIMENT = "experiment_name"
+BATCHES = 4
+PARTITION = 0.5
+SET_SIZE = 200000
+EXPERIMENT = "shallow174_no_trump_100k_uniform"
+optimizer = tf.train.RMSPropOptimizer 
 
 def suit_count_for_params(no_trump, trump):
     acc = 0;
@@ -42,7 +43,7 @@ dp.initialize_random(experiment_name);
 d_train = dp.get_distribution(data, outputs);
 d_test = dp.get_distribution(test_data, test_outputs);
 dp.save_distribution(path, d_train, d_test);
-optimizer = tf.train.RMSPropOptimizer 
+
 print(len(data));
 print(len(outputs));
 print(len(test_data));
