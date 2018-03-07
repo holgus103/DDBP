@@ -7,18 +7,37 @@ import sys;
 import pprint;
 
 
+# configure here
+TEST_TRUMP = True
+TRAIN_TRUMP = False
+TEST_NO_TRUMP = False
+TRAIN_NO_TRUMP = True
+BATCHES = 1
+PARTITION = 0.66
+SET_SIZE = 1000
+EXPERIMENT = "experiment_name"
+
+def suit_count_for_params(no_trump, trump):
+    acc = 0;
+    if(no_trump):
+        acc = acc + 1;
+    if(trump):
+        acc = acc + 4;
+    return acc;
+
+# main experiment code
 sys.path.append("./../");
 
 import models;
 import data_parser as dp;
 
-experiment_name = "shallow174_no_trump_100k";
+experiment_name = EXPERIMENT;
 path = "./summaries/{0}/".format(experiment_name);
 
 dp.initialize_random(experiment_name);
 
 # import data
-(data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", 200000, True, True, False, True, True, 0.5);
+(data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
 
 d_train = dp.get_distribution(data, outputs);
 d_test = dp.get_distribution(test_data, test_outputs);
@@ -30,7 +49,7 @@ print(len(test_data));
 print(len(test_outputs))
 # calculate test set length
 l = len(data);
-batch_count = 4;
+batch_count = BATCHES;
 data_batches = [];
 outputs_batches = [];
 
@@ -55,13 +74,13 @@ a.pretrain(0.001, 0, 7000, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2,
 # create classifier
 c = models.Classifier(a, 14);
 # train whole network
-c.train(data_batches, outputs_batches, 0.0001, 15000, 0.0001, path +"/finetuning", data, outputs, test_data, test_outputs, 1, 5, models.Model.mse_loss, 25, experiment_name);
+c.train(data_batches, outputs_batches, 0.0001, 15000, 0.0001, path +"/finetuning", data, outputs, test_data, test_outputs, suit_count_for_params(TRAIN_NO_TRUMP, TRAIN_TRUMP), suit_count_for_params(TEST_NO_TRUMP, TRAIN_NO_TRUMP), models.Model.mse_loss, 25, experiment_name);
 
 # evaluate results
 print(c.test(data, outputs));
 print(c.test(test_data, test_outputs));
-print(c.suit_based_accurancy(data, outputs, 1));
-print(c.suit_based_accurancy(test_data, test_outputs, 5));
+print(c.suit_based_accurancy(data, outputs, suit_count_for_params(TRAIN_NO_TRUMP, TRAIN_TRUMP)));
+print(c.suit_based_accurancy(test_data, test_outputs, suit_count_for_params(TEST_NO_TRUMP, TRAIN_NO_TRUMP)));
 c.save_model(experiment_name);
 
 

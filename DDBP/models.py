@@ -513,11 +513,13 @@ class Classifier(Model):
                 if it_counter % 100 == 0:
                     s = self.create_train_summary(train_data, train_output, test_data, test_output, train_suits, test_suits);
                     current_val = self.test(test_data, test_output)[0];
+                    print(current_val);
                     self.save_model(experiment_name + " at {0}".format(it_counter))
                     print("finetuning - it {0} - lval {1}".format(it_counter, lval));
                     writer.add_summary(summary, it_counter);
                     writer.add_summary(s, it_counter);
                     if prev_val != 0 and (current_val - prev_val) < delta:
+                        print(current_val - prev_val);
                         if(no_improvement_counter > no_improvement):
                             print("terminating due to no improvement");
                             print("finetuning - it {0} - lval {1}".format(it_counter, lval));
