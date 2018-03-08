@@ -135,7 +135,7 @@ class Autoencoder(Model):
                 return tf.nn.sigmoid(tf.add(tf.matmul(input, self.fixed_weights[index][i], transpose_b = is_decoder), self.out_biases_fixed[index][i]));
             return tf.nn.sigmoid(tf.add(tf.matmul(input, self.fixed_weights[index][i], transpose_b = is_decoder), self.fixed_biases[index][i]));
         if is_decoder:
-            return tf.nn.sigmoid(tf.add(tf.matmul(input, self.weights[index][i], transpose_b = is_decoder), self.out_biases_fixed[index][i]));
+            return tf.nn.sigmoid(tf.add(tf.matmul(input, self.weights[index][i], transpose_b = is_decoder), self.out_biases[index][i]));
         return tf.nn.sigmoid(tf.add(tf.matmul(input, self.weights[index][i], transpose_b = is_decoder), self.biases[index][i]));
 
     def create_weights(self, prev_count, curr_count):
@@ -167,24 +167,24 @@ class Autoencoder(Model):
 
     def setup_4x13_weights(self):
         weights = [];
-        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W13_1'));
-        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W13_2'));
-        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W13_3'));
-        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W13_4'));
+        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W21_1'));
+        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W21_2'));
+        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W21_3'));
+        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W21_4'));
         self.weights.append(weights);
 
         b  = [];
-        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B13_1'));
-        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B13_2'));
-        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B13_3'));
-        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B13_4'));
+        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B21_1'));
+        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B21_2'));
+        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B21_3'));
+        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B21_4'));
         self.biases.append(b);
 
         b_out = []
-        b_out.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B_out13_1'))
-        b_out.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B_out13_2'))
-        b_out.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B_out13_3'))
-        b_out.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B_out13_4'))
+        b_out.append(tf.Variable(tf.random_normal([61]), trainable = True, name='v_B_out61_1'))
+        b_out.append(tf.Variable(tf.random_normal([61]), trainable = True, name='v_B_out61_2'))
+        b_out.append(tf.Variable(tf.random_normal([61]), trainable = True, name='v_B_out61_3'))
+        b_out.append(tf.Variable(tf.random_normal([61]), trainable = True, name='v_B_out61_4'))
         self.out_biases.append(b_out);
 
 
@@ -210,7 +210,7 @@ class Autoencoder(Model):
 
         dec = [];
         for i in range(0,4):
-            dec.append(self.create_layer(0, layers[i], i, False, True));
+            dec.append(self.create_layer(0, tf.slice(layers[i], [0, , ]), i, False, True));
         
         net.append(dec);
 
