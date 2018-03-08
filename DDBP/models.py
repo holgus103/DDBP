@@ -1,5 +1,6 @@
 import tensorflow as tf;
 import time;
+import math;
 
 class Model:
     """
@@ -151,8 +152,9 @@ class Autoencoder(Model):
             Neuron count of the current layer
 
         """
-        w = tf.Variable(tf.random_uniform([prev_count, curr_count]), trainable = True, name='v_W{0}'.format(curr_count));
-        b = tf.Variable(tf.random_uniform([curr_count]), trainable = True, name='v_B{0}'.format(curr_count));
+        r = 1 / math.sqrt(prev_count + curr_count);
+        w = tf.Variable(tf.random_uniform([prev_count, curr_count], -r, r), trainable = True, name='v_W{0}'.format(curr_count));
+        b = tf.Variable(tf.random_uniform([curr_count], -r, r), trainable = True, name='v_B{0}'.format(curr_count));
         self.weights.append(w);
         self.biases.append(b);
         w_f = tf.Variable(tf.identity(w), trainable = False, name='f_W{0}'.format(curr_count));
@@ -160,7 +162,7 @@ class Autoencoder(Model):
         self.fixed_weights.append(w_f);
         self.fixed_biases.append(b_f);
         
-        b_out = tf.Variable(tf.random_uniform([prev_count]), trainable = True, name='v_B_out{0}'.format(curr_count));
+        b_out = tf.Variable(tf.random_uniform([prev_count], -r, r), trainable = True, name='v_B_out{0}'.format(curr_count));
         b_out_fixed = tf.Variable(tf.identity(b_out), trainable = False, name='f_B_out{0}'.format(curr_count));
         self.out_biases.append(b_out);
         self.out_biases_fixed.append(b_out_fixed);
@@ -304,6 +306,7 @@ class Autoencoder(Model):
                         # no significant change
                         if prev_val != 0 and (prev_val - lval) < delta:
                             if(no_improvement_counter > no_improvement):
+                                print(prev_val - lval);
                                 print("terminating due to no improvement");
                                 print("pretraining {0} - it {1} - lval {2}".format(i, it_counter, lval));
                                 return
@@ -512,7 +515,7 @@ class Classifier(Model):
                     lval, _, summary = self.autoencoder.session.run([loss, optimizer, summary_op], feed_dict={self.input_placeholder: data[k], self.output_placeholder: desired_output[k]});
                 if it_counter % 100 == 0:
                     s = self.create_train_summary(train_data, train_output, test_data, test_output, train_suits, test_suits);
-                    current_val = self.test(test_data, test_output)[0];
+                    current_val = self.suit_based_accurancy(test_data, test_output, test_suits)[0][0];
                     print(current_val);
                     self.save_model(experiment_name + " at {0}".format(it_counter))
                     print("finetuning - it {0} - lval {1}".format(it_counter, lval));
