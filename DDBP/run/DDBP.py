@@ -65,7 +65,7 @@ print(len(data_batches[0]))
 #print(len(data_batches[1]))
 # create autoencoder
 # a = models.Autoencoder(217, [197, 179, 162, 147], models.Model.cross_entropy_loss);
-a = models.Autoencoder(217, [174], models.Model.cross_entropy_loss);
+a = models.Autoencoder(models.Model.cross_entropy_loss);
 
 
 # pretrain each layer
