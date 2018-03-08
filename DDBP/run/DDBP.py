@@ -14,7 +14,7 @@ TEST_NO_TRUMP = False
 TRAIN_NO_TRUMP = True
 BATCHES = 1
 PARTITION = 0.66
-SET_SIZE = 1000
+SET_SIZE = 100
 EXPERIMENT = "experiment_name"
 
 def suit_count_for_params(no_trump, trump):
@@ -69,7 +69,7 @@ a = models.Autoencoder(models.Model.cross_entropy_loss);
 
 
 # pretrain each layer
-a.pretrain(0.001, 0, 7000, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
+a.pretrain(0.001, 0, 1000, data_batches, 0, 0.00, path + "{0}" , optimizer, 0.2, 15);
 
 # create classifier
 c = models.Classifier(a, 14);

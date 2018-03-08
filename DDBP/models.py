@@ -200,20 +200,22 @@ class Autoencoder(Model):
 
         for i in range(0,4):
             inputs.append(tf.concat([common, tf.slice(input, [0, 9 + i*52], [-1, 52])], 1))
-        print(inputs[0]);
-
+        self.sliced_inputs = inputs;
+    
         layers = [];
         for i in range(0,4):
             layers.append(self.create_layer(0, inputs[i], i))
 
         net.append(layers);
 
-        dec = [];
-        for i in range(0,4):
-            dec.append(self.create_layer(0, tf.slice(layers[i], [0, , ]), i, False, True));
         
-        net.append(dec);
 
+        decs = [];
+        for i in range(0, 4):
+            decs.append(self.create_layer(0, layers[i], i, is_decoder = True));        
+
+        net.append(decs);
+        return net;
 
     def __init__(self, loss):
         """
@@ -326,7 +328,7 @@ class Autoencoder(Model):
         input = self.input;
         step = tf.Variable(0, name='global_step', trainable=False);
         net = self.setup_4x13_layers(input);
-        loss_function = self.loss(net[len(net) - 1], input);
+        loss_function = self.loss(tf.concat(net[len(net) - 1], 1), tf.concat(self.sliced_inputs, 1));
         if(optimizer_class is tf.train.GradientDescentOptimizer):
             opt = optimizer_class(learning_rate);
         else:
@@ -335,12 +337,12 @@ class Autoencoder(Model):
         vars = self.get_variables_to_init(i);
         vars.append(step);
         self.session.run(tf.variables_initializer(vars));  
-        vars.extend([self.weights[i], self.biases[i], self.out_biases[i]])
+        vars.extend(self.weights[i]);
+        vars.extend(self.biases[i]);
+        vars.extend(self.out_biases[i]);
         self.session.run(Model.initialize_optimizer(opt, vars));
         loss_summary = tf.summary.scalar("loss", loss_function);
-        weights_summary = tf.summary.histogram("weights", self.weights[i]);
-        biases_summary = tf.summary.histogram("biases", self.biases[i]);
-        summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary]);
+        summary_op = tf.summary.merge([loss_summary]);
         writer = tf.summary.FileWriter(summary_path.format(i) + (ep > 0 and "ep{0}".format(ep) or "it{0}".format(it)) , graph=self.session.graph, flush_secs = 10000);
 
         if(delta > 0):
@@ -407,7 +409,10 @@ class Autoencoder(Model):
         net = [];
         inp = input;
         for i in range(0, len(self.weights)):
-            inp = self.create_layer(i, inp);
+            l = [];
+            for j in range(0, len(self.weights[i])):
+                l.append(self.create_layer(i, inp[j], j));
+            inp = tf.concat(l, 1);
             net.append(inp);
             
         return net;
@@ -469,8 +474,8 @@ class Classifier(Model):
 
         """
         self.autoencoder = autoencoder;
-        self.input_placeholder = tf.placeholder("float", [None, self.autoencoder.input_count]);
-        self.encoder = autoencoder.build_complete_net(self.input_placeholder);
+        self.input_placeholder = self.autoencoder.input;
+        self.encoder = autoencoder.build_complete_net(self.autoencoder.sliced_inputs);
         input = self.encoder[len(self.encoder) - 1];
         self.weights = tf.Variable(tf.random_normal([input.shape[1].value, outputs]));
         self.biases = tf.Variable(tf.random_normal([outputs]));
@@ -544,7 +549,9 @@ class Classifier(Model):
         opt = tf.train.RMSPropOptimizer(learning_rate);
         optimizer = opt.minimize(loss);
         self.autoencoder.session.run(tf.variables_initializer([self.weights, self.biases]));
-        slot_vars = [self.weights, self.biases] + self.autoencoder.biases + self.autoencoder.weights;
+        slot_vars = [self.weights, self.biases];
+        slot_vars.extend([item for items in self.autoencoder.biases for item in items]);
+        slot_vars.extend([item for items in self.autoencoder.weights for item in items]);
         self.autoencoder.session.run(Model.initialize_optimizer(opt, slot_vars));
         hist_summaries = [(self.autoencoder.weights[i], 'weights{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))];
         hist_summaries.extend([(self.autoencoder.biases[i], 'biases{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))]);
