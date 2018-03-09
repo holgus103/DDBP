@@ -166,56 +166,90 @@ class Autoencoder(Model):
         self.out_biases_fixed.append(b_out_fixed);
 
     def setup_4x13_weights(self):
+        # first hidden layer
         weights = [];
-        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W21_1'));
-        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W21_2'));
-        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W21_3'));
-        weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W21_4'));
+        fixed_weights = [];
+        for i in range(0, 4):
+            weights.append(tf.Variable(tf.random_normal([61, 21]), trainable = True, name='v_W21_{0}'.format(i+1)));  
+            fixed_weights.append(tf.Variable(tf.identity(weights[i]), trainable = False, name='f_W21_{0}'.format(i+1)));  
         self.weights.append(weights);
+        self.fixed_weights.append(fixed_weights)
+        
 
+        # second hidden layer
+        self.weights.append([tf.Variable(tf.random_normal([84, 21]), trainable = True, name='v_W21')]);
+
+        # first layer - biases
         b  = [];
-        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B21_1'));
-        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B21_2'));
-        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B21_3'));
-        b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B21_4'));
+        b_fixed = []
+        for i in range(0,4):
+            b.append(tf.Variable(tf.random_normal([21]), trainable = True, name='v_B21_{0}'.format(i+1)));
+            b_fixed.append(tf.Variable(tf.identity(b[i]), trainable = False, name='f_B21_{0}'.format(i+1)));
         self.biases.append(b);
+        self.fixed_biases.append(b_fixed)
+        # second layer - biases
+        self.biases.append([tf.Variable(tf.random_normal([21]), trainable = True, name='v_B21')]);
 
+        # first layer - output biases
         b_out = []
-        b_out.append(tf.Variable(tf.random_normal([61]), trainable = True, name='v_B_out61_1'))
-        b_out.append(tf.Variable(tf.random_normal([61]), trainable = True, name='v_B_out61_2'))
-        b_out.append(tf.Variable(tf.random_normal([61]), trainable = True, name='v_B_out61_3'))
-        b_out.append(tf.Variable(tf.random_normal([61]), trainable = True, name='v_B_out61_4'))
+        b_out_fixed = [];
+        for i in range(0,4):
+            b_out.append(tf.Variable(tf.random_normal([61]), trainable = True, name='v_B_out61_{0}'.format(i+1)));
+            b_out_fixed.append(tf.Variable(tf.identity(b_out[i]), trainable = False, name='f_B_out61_{0}'.format(i+1)));
         self.out_biases.append(b_out);
+        self.out_biases_fixed.append(b_out_fixed);
+
+        # second layer - output biases
+        self.out_biases.append([tf.Variable(tf.random_normal([84]), trainable = True, name='v_B_out81')]);
+
 
 
 
         return weights;
 
 
-    def setup_4x13_layers(self, input):
+    def setup_4x13_layers(self, input, i):
         net = [];
 
-        common = tf.slice(input, [0, 0], [-1, 9]);
-        inputs = [];
 
-        for i in range(0,4):
-            inputs.append(tf.concat([common, tf.slice(input, [0, 9 + i*52], [-1, 52])], 1))
-        self.sliced_inputs = inputs;
-    
+        for j in range(0, i):
+            layers = [];
+            for k in range(0, len(self.weight[j])):
+                layers.append(self.create_layer(j, input[k], k, is_fixed = True));
+                input[k] = layers[k];        
+            net.append(layers)
+
         layers = [];
-        for i in range(0,4):
-            layers.append(self.create_layer(0, inputs[i], i))
+
+        print(input)
+        if(len(self.weights[i]) == 1 and len(input) > 1):
+            input = [tf.concat(input, 1)];
+
+        for j in range(0, len(self.weights[i])):
+            layers.append(self.create_layer(i, input[j], j))
+            input[j] = layers[j];
 
         net.append(layers);
-
         
 
         decs = [];
-        for i in range(0, 4):
-            decs.append(self.create_layer(0, layers[i], i, is_decoder = True));        
+
+        for j in range(0, len(self.weights[i])):
+            decs.append(self.create_layer(i, layers[i], j, is_decoder = True));   
+            input[j] = decs[j];     
 
         net.append(decs);
-        return net;
+
+
+
+        for j in range(0, i):
+            decs = [];
+            for k in range(0, len(self.weights[i])):
+                decs.append(self.create_layer(j, layers[k], k));
+                input[k] = decs[k]; 
+            net.append(decs);              
+
+        return net; 
 
     def __init__(self, loss):
         """
@@ -234,7 +268,7 @@ class Autoencoder(Model):
         """
         self.loss = loss;
         self.input_count = 217;
-        self.layer_counts = [9 + 13];
+        self.layer_counts = [9 + 13, 9 + 13];
         self.weights = [];   
         self.biases = [];
         self.out_biases = [];
@@ -245,6 +279,13 @@ class Autoencoder(Model):
         l = len(self.layer_counts);
         self.prepare_session();
         self.setup_4x13_weights();
+
+        common = tf.slice(self.input, [0, 0], [-1, 9]);
+        inputs = [];
+
+        for i in range(0,4):
+            inputs.append(tf.concat([common, tf.slice(self.input, [0, 9 + i*52], [-1, 52])], 1))
+        self.sliced_inputs = inputs;
 
         # self.create_weights(input_count, layer_counts[0]);
         # add encoding layers
@@ -327,7 +368,7 @@ class Autoencoder(Model):
 
         input = self.input;
         step = tf.Variable(0, name='global_step', trainable=False);
-        net = self.setup_4x13_layers(input);
+        net = self.setup_4x13_layers(self.sliced_inputs, i);
         loss_function = self.loss(tf.concat(net[len(net) - 1], 1), tf.concat(self.sliced_inputs, 1));
         if(optimizer_class is tf.train.GradientDescentOptimizer):
             opt = optimizer_class(learning_rate);
@@ -439,7 +480,7 @@ class Autoencoder(Model):
         layers = [];
         inp = input;
         for i in range(0, n):
-            inp = self.create_layer(i, inp, is_fixed = True);
+            inp = self.create_layer(i, inp, is_fixed = False);
             layers.append(inp);
         
         inp = self.create_layer(n, inp);
@@ -477,6 +518,7 @@ class Classifier(Model):
         self.input_placeholder = self.autoencoder.input;
         self.encoder = autoencoder.build_complete_net(self.autoencoder.sliced_inputs);
         input = self.encoder[len(self.encoder) - 1];
+        print(input);
         self.weights = tf.Variable(tf.random_normal([input.shape[1].value, outputs]));
         self.biases = tf.Variable(tf.random_normal([outputs]));
         self.layer = tf.nn.softmax(tf.matmul(input, self.weights) + self.biases);
