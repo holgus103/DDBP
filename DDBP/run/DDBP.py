@@ -74,7 +74,7 @@ a.pretrain(0.001, 0, 7000, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2,
 # create classifier
 c = models.Classifier(a, 14);
 # train whole network
-c.train(data_batches, outputs_batches, 0.0001, 15000, 0.0001, path +"/finetuning", data, outputs, test_data, test_outputs, suit_count_for_params(TRAIN_NO_TRUMP, TRAIN_TRUMP), suit_count_for_params(TEST_NO_TRUMP, TRAIN_NO_TRUMP), models.Model.mse_loss, 25, experiment_name);
+c.train(data_batches, outputs_batches, 0.0001, 15000, 0.0001, path +"/finetuning", data, outputs, test_data, test_outputs, suit_count_for_params(TRAIN_NO_TRUMP, TRAIN_TRUMP), suit_count_for_params(TEST_NO_TRUMP, TEST_TRUMP), models.Model.mse_loss, 25, experiment_name);
 
 # evaluate results
 print(c.test(data, outputs));
