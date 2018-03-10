@@ -14,7 +14,7 @@ TEST_NO_TRUMP = True
 TRAIN_NO_TRUMP = True
 BATCHES = 1
 PARTITION = 0.5
-SET_SIZE = 200000
+SET_SIZE = 200
 EXPERIMENT = "experiment_name"
 
 
@@ -57,7 +57,7 @@ data_batches.append(data[(batch_count - 1) * batch_size : l]);
 outputs_batches.append(outputs[(batch_count - 1) * batch_size : l]);
 print(len(data_batches[0]))
 # create autoencoder
-a = models.Autoencoder(217, [52, 13], models.Model.cross_entropy_loss);
+a = models.Autoencoder(208, [52, 13], models.Model.cross_entropy_loss);
 
 
 # pretrain each layer

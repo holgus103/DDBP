@@ -65,7 +65,7 @@ def parse(input, no_trump, trump):
         if c=="\n":
             continue
         arr[dict[c]] = 1;
-o       utputs.append(arr);
+        outputs.append(arr);
         # if c=="\n":
         #     continue
         # arr = dict[c] * 1.0 / 14.0 + 0.5/14.0

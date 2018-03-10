@@ -135,7 +135,7 @@ class Autoencoder(Model):
                 return tf.nn.sigmoid(tf.add(tf.matmul(input, self.fixed_weights[index], transpose_b = is_decoder), self.out_biases_fixed[index]));
             return tf.nn.sigmoid(tf.add(tf.matmul(input, self.fixed_weights[index], transpose_b = is_decoder), self.fixed_biases[index]));
         if is_decoder:
-            return tf.nn.sigmoid(tf.add(tf.matmul(input, self.weights[index], transpose_b = is_decoder), self.out_biases_fixed[index]));
+            return tf.nn.sigmoid(tf.add(tf.matmul(input, self.weights[index], transpose_b = is_decoder), self.out_biases[index]));
         return tf.nn.sigmoid(tf.add(tf.matmul(input, self.weights[index], transpose_b = is_decoder), self.biases[index]));
 
     def create_weights(self, prev_count, curr_count):
