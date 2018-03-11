@@ -72,16 +72,26 @@ def parse(input, no_trump, trump):
         # outputs.append(arr);
 
     
-    deals = [process_player(vals[i]) for i in range(0, 4)];
+    org_deals = [process_player(vals[i]) for i in range(0, 4)];
     #players = [[player[(i*13):((i+1):13)] for i in range(0, 4)] for player in deal]
-    
+    # return (deals, outputs);
 
     # no trump, spades, hearts, diamonds, clubs
     for suit in range(b, e):
         # east, north, west, south
         for vist in range(0,4):
+            deals = [numpy.copy(i) for i in org_deals]
+            if suit > 1:
+                for k in range(0, 4):
+                    spades = numpy.copy(deals[k][0:13]);
+                    # switch spades with current trump
+                    deals[k][0:13] = deals[k][13*(suit - 1):13*suit];
+                    deals[k][13*(suit-1):13*suit] = spades;
+
             current = deals[vist:(len(deals))] + deals[0:vist];
+
             data.append(numpy.concatenate(current));
+            
     return (data, outputs); 
 
     
@@ -114,7 +124,6 @@ def process_player(cards):
         '9' : 5,
         '8' : 6,
         '7' : 7,
-        '6' : 8,
         '6' : 8,
         '5' : 9,
         '4' : 10,
