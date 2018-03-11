@@ -15,7 +15,7 @@ TRAIN_NO_TRUMP = False
 BATCHES = 16
 PARTITION = 0.5
 SET_SIZE = 200000
-EXPERIMENT = "trump_hand_rotations_14out_100k"
+EXPERIMENT = "trump_hand_rotations_1out_100k"
 
 
 
