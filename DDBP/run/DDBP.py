@@ -8,14 +8,14 @@ import pprint;
 
 
 # configure here
-TEST_TRUMP = False
-TRAIN_TRUMP = False
-TEST_NO_TRUMP = True
-TRAIN_NO_TRUMP = True
-BATCHES = 4
+TEST_TRUMP = True
+TRAIN_TRUMP = True
+TEST_NO_TRUMP = False
+TRAIN_NO_TRUMP = False
+BATCHES = 16
 PARTITION = 0.5
-SET_SIZE = 2000
-EXPERIMENT = "no_trump_hand_rotations_14out_100k"
+SET_SIZE = 200000
+EXPERIMENT = "trump_hand_rotations_14out_100k"
 
 
 
@@ -24,14 +24,14 @@ sys.path.append("./../");
 
 import models;
 import data_parser as dp;
-
+        
 experiment_name = EXPERIMENT;
 path = "./summaries/{0}/".format(experiment_name);
 
 dp.initialize_random(experiment_name);
 
 # import data
-(data, outputs, test_data, test_outputs) = dp.read_file("./data/library", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
+(data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
 
 d_train = dp.get_distribution(data, outputs);
 d_test = dp.get_distribution(test_data, test_outputs);
@@ -72,7 +72,7 @@ c.train(data_batches, outputs_batches, 0.0001, 15000, 0.0001, path +"/finetuning
 print(c.test(data, outputs));
 print(c.test(test_data, test_outputs));
 print(c.suit_based_accurancy(data, outputs, dp.suit_count_for_params(TRAIN_NO_TRUMP, TRAIN_TRUMP)));
-print(c.suit_based_accurancy(test_data, test_outputs, dp.suit_count_for_params(TEST_NO_TRUMP, TRAIN_NO_TRUMP)));
+print(c.suit_based_accurancy(test_data, test_outputs, dp.suit_count_for_params(TEST_NO_TRUMP, TEST_TRUMP)));
 c.save_model(experiment_name);
 
 
