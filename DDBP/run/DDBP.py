@@ -15,7 +15,7 @@ TRAIN_NO_TRUMP = False
 BATCHES = 16
 PARTITION = 0.5
 SET_SIZE = 200000
-EXPERIMENT = "trump_hand_rotations_14out_100k"
+EXPERIMENT = "trump_hand_rotations_14out_100k_2"
 
 
 
@@ -61,7 +61,7 @@ a = models.Autoencoder(208, [52, 13], models.Model.cross_entropy_loss);
 
 
 # pretrain each layer
-a.pretrain(0.001, 0, 1000, data_batches, 0, 0, path + "{0}" , optimizer, 0.2, 15);
+a.pretrain(0.001, 0, 1000, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
 
 # create classifier
 c = models.Classifier(a, 14);
