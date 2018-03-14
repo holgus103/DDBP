@@ -66,18 +66,33 @@ def parse(input, no_trump, trump):
             continue
         arr[dict[c]] = 1;
         outputs.append(arr);
+        # if c=="\n":
+        #     continue
+        # arr = dict[c] * 1.0 / 14.0 + 0.5/14.0
+        # outputs.append(arr);
 
-    players = numpy.concatenate((process_player(vals[0]), process_player(vals[1]), process_player(vals[2]), process_player(vals[3])));
+    
+    org_deals = [process_player(vals[i]) for i in range(0, 4)];
+    #players = [[player[(i*13):((i+1):13)] for i in range(0, 4)] for player in deal]
+    # return (deals, outputs);
 
+    # no trump, spades, hearts, diamonds, clubs
     for suit in range(b, e):
-        for vista in range(0,4):
+        # east, north, west, south
+        for vist in range(0,4):
+            deals = [numpy.copy(i) for i in org_deals]
+            if suit > 1:
+                for k in range(0, 4):
+                    spades = numpy.copy(deals[k][0:13]);
+                    # switch spades with current trump
+                    deals[k][0:13] = deals[k][13*(suit - 1):13*suit];
+                    deals[k][13*(suit-1):13*suit] = spades;
+
+            current = deals[vist:(len(deals))] + deals[0:vist];
+
+            data.append(numpy.concatenate(current));
             
-            suit_arr = numpy.repeat(0, 5);
-            vista_arr = numpy.repeat(0, 4);
-            suit_arr[suit] = 1;
-            vista_arr[vista] = 1;
-            data.append(numpy.concatenate((suit_arr, vista_arr, players)));
-    return (data, outputs);
+    return (data, outputs); 
 
     
 
@@ -109,7 +124,6 @@ def process_player(cards):
         '9' : 5,
         '8' : 6,
         '7' : 7,
-        '6' : 8,
         '6' : 8,
         '5' : 9,
         '4' : 10,
@@ -306,3 +320,12 @@ def initialize_random(name):
 def reset_random(name):
     file = open(name, "rb");
     random.setstate(pickle.load(file));
+
+
+def suit_count_for_params(no_trump, trump):
+    acc = 0;
+    if(no_trump):
+        acc = acc + 1;
+    if(trump):
+        acc = acc + 4;
+    return acc;
