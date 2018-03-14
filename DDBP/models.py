@@ -234,14 +234,14 @@ class Autoencoder(Model):
         net.append(decs);
 
         if(i == 1):
-
+            decs = [];
             inp = [];
             for k in range(0, len(self.weights[i-1])):
                 inp.append(tf.slice(input[0], [0, i*13], [-1, 13]))
             input = inp;
 
             for k in range(0, len(self.weights[i-1])):
-                decs.append(self.create_layer(i-1, layers[k], k, is_decoder=True, is_fixed=True));
+                decs.append(self.create_layer(i-1, input[k], k, is_decoder=True, is_fixed=True));
                 input[k] = decs[k]; 
             net.append(decs);              
 
@@ -310,9 +310,9 @@ class Autoencoder(Model):
         vars = [];
 
         if 0<n:
-            vars.append(self.fixed_biases[n-1]);
-            vars.append(self.fixed_weights[n-1]);
-            vars.append(self.out_biases_fixed[n-1]);
+            vars = vars + self.fixed_biases[n-1];
+            vars = vars + self.fixed_weights[n-1];
+            vars = vars + self.out_biases_fixed[n-1];
         return vars;
 
     def prepare_session(self):
@@ -363,7 +363,7 @@ class Autoencoder(Model):
 
         input = self.input;
         step = tf.Variable(0, name='global_step', trainable=False);
-        net = self.setup_4x13_layers(self.sliced_inputs, i);
+        net = self.setup_4x13_layers(self.sliced_inputs[:], i);
         loss_function = self.loss(tf.concat(net[len(net) - 1], 1), tf.concat(self.sliced_inputs, 1));
         if(optimizer_class is tf.train.GradientDescentOptimizer):
             opt = optimizer_class(learning_rate);
@@ -448,7 +448,7 @@ class Autoencoder(Model):
             l = [];
             for j in range(0, len(self.weights[i])):
                 l.append(self.create_layer(i, inp[j], j));
-            inp = tf.concat(l, 1);
+            inp = [tf.concat(l, 1)];
             net.append(inp);
             
         return net;
@@ -512,7 +512,7 @@ class Classifier(Model):
         self.autoencoder = autoencoder;
         self.input_placeholder = self.autoencoder.input;
         self.encoder = autoencoder.build_complete_net(self.autoencoder.sliced_inputs);
-        input = self.encoder[len(self.encoder) - 1];
+        input = self.encoder[len(self.encoder) - 1][0];
         print(input);
         self.weights = tf.Variable(tf.random_normal([input.shape[1].value, outputs]));
         self.biases = tf.Variable(tf.random_normal([outputs]));
