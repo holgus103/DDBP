@@ -88,7 +88,7 @@ def parse(input, no_trump, trump):
                     deals[k][0:13] = deals[k][13*(suit - 1):13*suit];
                     deals[k][13*(suit-1):13*suit] = spades;
 
-            current = deals[vist:(len(deals))] + deals[0:vist];
+            current = deals[(4-vist):(len(deals))] + deals[0:(4-vist)];
 
             data.append(numpy.concatenate(current));
             

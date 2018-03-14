@@ -93,7 +93,7 @@ def parseNoTrump():
     p3 = p3_spades + p3_hearts + p3_diamonds + p3_clubs
     p4 = p4_spades + p4_hearts + p4_diamonds + p4_clubs
     out = [nt_0, nt_1, nt_2, nt_3];
-    inputs = [p1 + p2 + p3 + p4, p2 + p3 + p4 + p1, p3 + p4 + p1 + p2, p4 + p1 + p2 + p3]
+    inputs = [p1 + p2 + p3 + p4, p4 + p1 + p2 + p3, p3 + p4 + p1 + p2,  p1 + p2 + p3 + p4]
     for i in range(0,4):
         print(array_assert(data[i], inputs[i]))
         print(array_assert(out[i], outputs[i]))
@@ -128,24 +128,25 @@ def parseColors():
     hands = [\
     # spades 
                 p1[0] + p2[0] + p3[0] + p4[0],\
-                p2[0] + p3[0] + p4[0] + p1[0],\
-                p3[0] + p4[0] + p1[0] + p2[0],\
                 p4[0] + p1[0] + p2[0] + p3[0],\
+                p3[0] + p4[0] + p1[0] + p2[0],\
+                p2[0] + p3[0] + p4[0] + p1[0],\
+
     # hearts
                 p1[1] + p2[1] + p3[1] + p4[1],\
-                p2[1] + p3[1] + p4[1] + p1[1],\
-                p3[1] + p4[1] + p1[1] + p2[1],\
                 p4[1] + p1[1] + p2[1] + p3[1],\
+                p3[1] + p4[1] + p1[1] + p2[1],\
+                p2[1] + p3[1] + p4[1] + p1[1],\
     # diamonds 
                 p1[2] + p2[2] + p3[2] + p4[2],\
-                p2[2] + p3[2] + p4[2] + p1[2],\
-                p3[2] + p4[2] + p1[2] + p2[2],\
                 p4[2] + p1[2] + p2[2] + p3[2],\
+                p3[2] + p4[2] + p1[2] + p2[2],\
+                p2[2] + p3[2] + p4[2] + p1[2],\
     # clubs
                 p1[3] + p2[3] + p3[3] + p4[3],\
-                p2[3] + p3[3] + p4[3] + p1[3],\
+                p4[3] + p1[3] + p2[3] + p3[3],\
                 p3[3] + p4[3] + p1[3] + p2[3],\
-                p4[3] + p1[3] + p2[3] + p3[3]\
+                p2[3] + p3[3] + p4[3] + p1[3]\
     ]     
     for i in range(0, len(data)):
         print(array_assert(hands[i], data[i]));
