@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>4d3ec3d9-70a6-4e02-82ab-46e0c29720db</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>run\DDBP.py</StartupFile>
+    <StartupFile>parsing_tests.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -23,6 +23,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="data_parser.py" />
+    <Compile Include="parsing_tests.py" />
     <Compile Include="run\DDBP.py">
       <SubType>Code</SubType>
     </Compile>
