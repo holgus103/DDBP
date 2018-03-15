@@ -12,16 +12,15 @@ PARTITION = 1
 SET_SIZE = 2
 
 def testPlayerRotations():
-    (data, outputs, test_data, test_outputs) = dp.read_file("./DDBP/data/library", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
+    (data, outputs, test_data, test_outputs) = dp.read_file("./data/library", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
     for i in range(0, 4):
         #print("i: {0}".format(i))
-        c = data[0][(i*52):((i+1)*52)]
-        for j in range(1, 4):            
-            start = (i - j + 4) % 4;
-            end = (i - j + 4) % 4 + 1
-            if(not np.array_equal(data[j][start*52:end*52], c)):
-                print("FAILURE i: {0} j: {1}".format(i,j))
-                return False;
+        c = data[0][(i*52):((i+1)*52)]      
+        start = (i + 2) % 4;
+        end = (i + 2) % 4 + 1
+        if(not np.array_equal(data[1][start*52:end*52], c)):
+            print("FAILURE i: {0}".format(i))
+            return False;
     return True;
 
 line = "T5.K4.652.A98542 K6.QJT976.QT7.Q6 432.A.AKJ93.JT73 AQJ987.8532.84.K:65658888888843433232"
@@ -92,9 +91,9 @@ def parseNoTrump():
     p2 = p2_spades + p2_hearts + p2_diamonds + p2_clubs
     p3 = p3_spades + p3_hearts + p3_diamonds + p3_clubs
     p4 = p4_spades + p4_hearts + p4_diamonds + p4_clubs
-    out = [nt_0, nt_1, nt_2, nt_3];
-    inputs = [p1 + p2 + p3 + p4, p2 + p3 + p4 + p1, p3 + p4 + p1 + p2, p4 + p1 + p2 + p3]
-    for i in range(0,4):
+    out = [nt_0, nt_2];
+    inputs = [p1 + p2 + p3 + p4, p3 + p4 + p1 + p2] 
+    for i in range(0,2):
         print(array_assert(data[i], inputs[i]))
         print(array_assert(out[i], outputs[i]))
 
@@ -128,24 +127,17 @@ def parseColors():
     hands = [\
     # spades 
                 p1[0] + p2[0] + p3[0] + p4[0],\
-                p2[0] + p3[0] + p4[0] + p1[0],\
                 p3[0] + p4[0] + p1[0] + p2[0],\
-                p4[0] + p1[0] + p2[0] + p3[0],\
+
     # hearts
                 p1[1] + p2[1] + p3[1] + p4[1],\
-                p2[1] + p3[1] + p4[1] + p1[1],\
                 p3[1] + p4[1] + p1[1] + p2[1],\
-                p4[1] + p1[1] + p2[1] + p3[1],\
     # diamonds 
                 p1[2] + p2[2] + p3[2] + p4[2],\
-                p2[2] + p3[2] + p4[2] + p1[2],\
                 p3[2] + p4[2] + p1[2] + p2[2],\
-                p4[2] + p1[2] + p2[2] + p3[2],\
     # clubs
                 p1[3] + p2[3] + p3[3] + p4[3],\
-                p2[3] + p3[3] + p4[3] + p1[3],\
                 p3[3] + p4[3] + p1[3] + p2[3],\
-                p4[3] + p1[3] + p2[3] + p3[3]\
     ]     
     for i in range(0, len(data)):
         print(array_assert(hands[i], data[i]));

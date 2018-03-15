@@ -60,12 +60,17 @@ def parse(input, no_trump, trump):
 
     b = (no_trump and 1 or 2) - 1 ;
     e = trump and 5 or 1;
-    for c in t[1][b*4:e*4]:
-        arr = numpy.repeat(0, 14);
-        if c=="\n":
-            continue
-        arr[dict[c]] = 1;
-        outputs.append(arr);
+
+    for i in range(b*4,e*4):
+        if(i % 2 == 1):
+            continue;
+        else:
+            c = t[1][i];
+            arr = numpy.repeat(0, 14);
+            if c=="\n":
+                continue
+            arr[dict[c]] = 1;
+            outputs.append(arr);
         # if c=="\n":
         #     continue
         # arr = dict[c] * 1.0 / 14.0 + 0.5/14.0
@@ -78,8 +83,8 @@ def parse(input, no_trump, trump):
 
     # no trump, spades, hearts, diamonds, clubs
     for suit in range(b, e):
-        # east, north, west, south
-        for vist in range(0,4):
+        # south, east, north, west
+        for vist in (0,2):
             deals = [numpy.copy(i) for i in org_deals]
             if suit > 1:
                 for k in range(0, 4):
@@ -87,8 +92,8 @@ def parse(input, no_trump, trump):
                     # switch spades with current trump
                     deals[k][0:13] = deals[k][13*(suit - 1):13*suit];
                     deals[k][13*(suit-1):13*suit] = spades;
-
-            current = deals[vist:(len(deals))] + deals[0:vist];
+            current = deals[(4-vist):(len(deals))] + deals[0:(4-vist)];
+            #current = numpy.concatenate(deals);
 
             data.append(numpy.concatenate(current));
             
