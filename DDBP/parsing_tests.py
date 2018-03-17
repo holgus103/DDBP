@@ -84,6 +84,9 @@ def array_assert(arr1, arr2):
             return False
     return True;
 
+def getOutput(i):
+    return [i * 1/14.0 + 1/28.0];
+
 def parseNoTrump():
     print("parseNoTrump:");
     (data, outputs) = dp.parse(line, True, False);
@@ -91,7 +94,7 @@ def parseNoTrump():
     p2 = p2_spades + p2_hearts + p2_diamonds + p2_clubs
     p3 = p3_spades + p3_hearts + p3_diamonds + p3_clubs
     p4 = p4_spades + p4_hearts + p4_diamonds + p4_clubs
-    out = [nt_0, nt_2];
+    out = [getOutput(6), getOutput(6)];
     inputs = [p1 + p2 + p3 + p4, p3 + p4 + p1 + p2] 
     for i in range(0,2):
         print(array_assert(data[i], inputs[i]))

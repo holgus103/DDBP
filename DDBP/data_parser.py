@@ -61,20 +61,16 @@ def parse(input, no_trump, trump):
     b = (no_trump and 1 or 2) - 1 ;
     e = trump and 5 or 1;
 
+
     for i in range(b*4,e*4):
         if(i % 2 == 1):
             continue;
         else:
             c = t[1][i];
-            arr = numpy.repeat(0, 14);
             if c=="\n":
                 continue
-            arr[dict[c]] = 1;
+            arr = numpy.array([dict[c] * 1.0 / 14.0 + 0.5/14.0]);
             outputs.append(arr);
-        # if c=="\n":
-        #     continue
-        # arr = dict[c] * 1.0 / 14.0 + 0.5/14.0
-        # outputs.append(arr);
 
     
     org_deals = [process_player(vals[i]) for i in range(0, 4)];
