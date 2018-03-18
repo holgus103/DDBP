@@ -8,15 +8,15 @@ import pprint;
 
 
 # configure here
-TEST_TRUMP = False
-TRAIN_TRUMP = False
-TEST_NO_TRUMP = True
-TRAIN_NO_TRUMP = True
+TEST_TRUMP = True
+TRAIN_TRUMP = True
+TEST_NO_TRUMP = False
+TRAIN_NO_TRUMP = False
 
 BATCHES = 4
 PARTITION = 0.5
 SET_SIZE = 200000
-EXPERIMENT = "altered_strucutre_2_hidden_layers_no_trump_hand_rotations_1out_100k_proper"
+EXPERIMENT = "altered_strucutre_2_hidden_layers_trump_hand_rotations_1out_100k_proper"
 
 
 # main experiment code
