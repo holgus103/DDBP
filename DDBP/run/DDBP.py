@@ -10,8 +10,8 @@ import pprint;
 # configure here
 TEST_TRUMP = True
 TRAIN_TRUMP = True
-TEST_NO_TRUMP = True
-TRAIN_NO_TRUMP = True
+TEST_NO_TRUMP = False
+TRAIN_NO_TRUMP = False
 
 BATCHES = 4
 PARTITION = 0.5
