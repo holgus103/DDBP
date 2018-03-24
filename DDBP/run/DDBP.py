@@ -15,7 +15,7 @@ TRAIN_NO_TRUMP = False
 BATCHES = 4
 PARTITION = 0.5
 SET_SIZE = 200000
-EXPERIMENT = "trump_hand_rotations_14out_100k_proper"
+EXPERIMENT = "trump_rotations_104enc_quick"
 
 
 
@@ -57,17 +57,16 @@ data_batches.append(data[(batch_count - 1) * batch_size : l]);
 outputs_batches.append(outputs[(batch_count - 1) * batch_size : l]);
 print(len(data_batches[0]))
 # create autoencoder
-a = models.Autoencoder(208, [52, 13], models.Model.cross_entropy_loss);
+a = models.Autoencoder(208, [104], models.Model.cross_entropy_loss);
 
 
 # pretrain each layer
-a.pretrain(0.001, 0, 1000, data_batches, 0, 0.1, path + "{0}" , optimizer, 0.2, 15);
-a.pretrain(0.001, 1, 1000, data_batches, 0, 0.1, path + "{0}" , optimizer, 0.2, 15);
+a.pretrain(0.001, 0, 200, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
 
 # create classifier
-c = models.Classifier(a, 14);
+c = models.Classifier(a, [52, 13, 14]);
 # train whole network
-c.train(data_batches, outputs_batches, 0.0001, 15000, 0.0001, path +"/finetuning", data, outputs, test_data, test_outputs, dp.suit_count_for_params(TRAIN_NO_TRUMP, TRAIN_TRUMP), dp.suit_count_for_params(TEST_NO_TRUMP, TEST_TRUMP), models.Model.mse_loss, 25, experiment_name);
+c.train(data_batches, outputs_batches, 0.001, 15000, 0, path +"/finetuning", data, outputs, test_data, test_outputs, dp.suit_count_for_params(TRAIN_NO_TRUMP, TRAIN_TRUMP), dp.suit_count_for_params(TEST_NO_TRUMP, TEST_TRUMP), models.Model.mse_loss, 25, experiment_name);
 
 # evaluate results
 print(c.test(data, outputs));

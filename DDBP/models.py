@@ -291,7 +291,7 @@ class Autoencoder(Model):
         summary_op = tf.summary.merge([loss_summary, weights_summary, biases_summary]);
         writer = tf.summary.FileWriter(summary_path.format(i) + (ep > 0 and "ep{0}".format(ep) or "it{0}".format(it)) , graph=self.session.graph, flush_secs = 10000);
 
-        if(delta > 0):
+        if(delta >= 0):
             no_improvement_counter = 0;
             prev_val = 0;
             it_counter = 0;
@@ -405,7 +405,7 @@ class Classifier(Model):
 
     """
 
-    def __init__(self, autoencoder, outputs):
+    def __init__(self, autoencoder, counts):
         """
         Class constructor
 
@@ -420,10 +420,22 @@ class Classifier(Model):
         self.input_placeholder = tf.placeholder("float", [None, self.autoencoder.input_count]);
         self.encoder = autoencoder.build_complete_net(self.input_placeholder);
         input = self.encoder[len(self.encoder) - 1];
-        self.weights = tf.Variable(tf.random_normal([input.shape[1].value, outputs]));
-        self.biases = tf.Variable(tf.random_normal([outputs]));
-        self.layer = tf.nn.softmax(tf.matmul(input, self.weights) + self.biases);
-        self.output_placeholder = tf.placeholder("float", [None, outputs]);
+        self.weights = [];
+        self.biases = [];
+        self.layers = [];
+        prev = input.shape[1].value;
+        for i in range(0, len(counts)-1):            
+            self.weights.append(tf.Variable(tf.random_normal([prev, counts[i]])));
+            self.biases.append(tf.Variable(tf.random_normal([counts[i]])));
+            self.layers.append(tf.nn.sigmoid(tf.matmul(input, self.weights[i]) + self.biases[i]));
+            prev = counts[i];
+            input = self.layers[i];
+        i = len(counts) - 1
+        self.weights.append(tf.Variable(tf.random_normal([prev, counts[i]])));
+        self.biases.append(tf.Variable(tf.random_normal([counts[i]])));
+        self.layers.append(tf.nn.softmax(tf.matmul(input, self.weights[i]) + self.biases[i]));
+        self.layer = self.layers[len(self.layers) - 1];
+        self.output_placeholder = tf.placeholder("float", [None, counts[i]]);
         self.get_accuracy_tensors();
         
     def create_train_summary(self, data, output, test_data, test_output, train_suits, test_suits):
@@ -491,8 +503,8 @@ class Classifier(Model):
         loss = loss_f(self.output_placeholder, self.layer); 
         opt = tf.train.RMSPropOptimizer(learning_rate);
         optimizer = opt.minimize(loss);
-        self.autoencoder.session.run(tf.variables_initializer([self.weights, self.biases]));
-        slot_vars = [self.weights, self.biases] + self.autoencoder.biases + self.autoencoder.weights;
+        self.autoencoder.session.run(tf.variables_initializer(self.weights + self.biases));
+        slot_vars = self.weights +  self.biases + self.autoencoder.biases + self.autoencoder.weights;
         self.autoencoder.session.run(Model.initialize_optimizer(opt, slot_vars));
         hist_summaries = [(self.autoencoder.weights[i], 'weights{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))];
         hist_summaries.extend([(self.autoencoder.biases[i], 'biases{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))]);
@@ -502,7 +514,7 @@ class Classifier(Model):
 
         writer = tf.summary.FileWriter(path, graph=self.autoencoder.session.graph)
 
-        if delta > 0:
+        if delta >= 0:
             prev_val = 0;
             current_val = 0;
             no_improvement_counter = 0;
@@ -514,11 +526,12 @@ class Classifier(Model):
                     s = self.create_train_summary(train_data, train_output, test_data, test_output, train_suits, test_suits);
                     current_val = self.test(test_data, test_output)[0];
                     print(current_val);
-                    self.save_model(experiment_name + " at {0}".format(it_counter))
+                    if it_counter % 1000 == 0:
+                        self.save_model(experiment_name + " at {0}".format(it_counter))
                     print("finetuning - it {0} - lval {1}".format(it_counter, lval));
                     writer.add_summary(summary, it_counter);
                     writer.add_summary(s, it_counter);
-                    if prev_val != 0 and (current_val - prev_val) < delta:
+                    if prev_val != 0 and (current_val - prev_val) <= delta:
                         print(current_val - prev_val);
                         if(no_improvement_counter > no_improvement):
                             print("terminating due to no improvement");
