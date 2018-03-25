@@ -63,8 +63,7 @@ a = models.Autoencoder(models.Model.cross_entropy_loss);
 
 
 # pretrain each layer
-a.pretrain(0.001, 0, 1000, data_batches, 0, 0.1, path + "{0}" , optimizer, 0.2, 15);
-a.pretrain(0.001, 1, 1000, data_batches, 0, 0.1, path + "{0}" , optimizer, 0.2, 15);
+a.pretrain(0.001, 0, 1000, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
 
 # create classifier
 c = models.Classifier(a, 14);

@@ -169,25 +169,25 @@ class Autoencoder(Model):
         weights = [];
         fixed_weights = [];
         for i in range(0, 4):
-            weights.append(tf.Variable(tf.random_normal([52, 13]), trainable = True, name='v_W13_{0}'.format(i+1)));  
+            weights.append(tf.Variable(tf.random_normal([52, 26]), trainable = True, name='v_W13_{0}'.format(i+1)));  
             fixed_weights.append(tf.Variable(tf.identity(weights[i]), trainable = False, name='f_W13_{0}'.format(i+1)));  
         self.weights.append(weights);
         self.fixed_weights.append(fixed_weights)
         
 
         # second hidden layer
-        self.weights.append([tf.Variable(tf.random_normal([52, 13]), trainable = True, name='v_W13')]);
+        #self.weights.append([tf.Variable(tf.random_normal([52, 13]), trainable = True, name='v_W13')]);
 
         # first layer - biases
         b  = [];
         b_fixed = []
         for i in range(0,4):
-            b.append(tf.Variable(tf.random_normal([13]), trainable = True, name='v_B13_{0}'.format(i+1)));
+            b.append(tf.Variable(tf.random_normal([26]), trainable = True, name='v_B13_{0}'.format(i+1)));
             b_fixed.append(tf.Variable(tf.identity(b[i]), trainable = False, name='f_B13_{0}'.format(i+1)));
         self.biases.append(b);
         self.fixed_biases.append(b_fixed)
         # second layer - biases
-        self.biases.append([tf.Variable(tf.random_normal([13]), trainable = True, name='v_B13')]);
+        #self.biases.append([tf.Variable(tf.random_normal([13]), trainable = True, name='v_B13')]);
 
         # first layer - output biases
         b_out = []
@@ -199,7 +199,7 @@ class Autoencoder(Model):
         self.out_biases_fixed.append(b_out_fixed);
 
         # second layer - output biases
-        self.out_biases.append([tf.Variable(tf.random_normal([52]), trainable = True, name='v_B_out52')]);
+        #self.out_biases.append([tf.Variable(tf.random_normal([52]), trainable = True, name='v_B_out52')]);
 
 
         return weights;
@@ -264,7 +264,7 @@ class Autoencoder(Model):
         """
         self.loss = loss;
         self.input_count = 208;
-        self.layer_counts = [13, 13];
+        self.layer_counts = [26];
         self.weights = [];   
         self.biases = [];
         self.out_biases = [];
