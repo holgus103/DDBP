@@ -355,7 +355,7 @@ class Autoencoder(Model):
         net = [];
         inp = input;
         for i in range(0, len(self.weights)):
-            inp = self.create_layer(i, inp);
+            inp = self.create_layer(i, inp, is_fixed=True);
             net.append(inp);
             
         return net;
@@ -419,6 +419,7 @@ class Classifier(Model):
         self.autoencoder = autoencoder;
         self.input_placeholder = tf.placeholder("float", [None, self.autoencoder.input_count]);
         self.encoder = autoencoder.build_complete_net(self.input_placeholder);
+
         input = self.encoder[len(self.encoder) - 1];
         self.weights = [];
         self.biases = [];
@@ -503,7 +504,7 @@ class Classifier(Model):
         loss = loss_f(self.output_placeholder, self.layer); 
         opt = tf.train.RMSPropOptimizer(learning_rate);
         optimizer = opt.minimize(loss);
-        self.autoencoder.session.run(tf.variables_initializer(self.weights + self.biases));
+        self.autoencoder.session.run(tf.variables_initializer(self.weights + self.biases + self.autoencoder.fixed_biases + self.autoencoder.fixed_weights));
         slot_vars = self.weights +  self.biases + self.autoencoder.biases + self.autoencoder.weights;
         self.autoencoder.session.run(Model.initialize_optimizer(opt, slot_vars));
         hist_summaries = [(self.autoencoder.weights[i], 'weights{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))];
