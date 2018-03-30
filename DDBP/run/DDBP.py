@@ -15,7 +15,7 @@ TRAIN_NO_TRUMP = True
 BATCHES = 4
 PARTITION = 0.66
 SET_SIZE = 600000
-EXPERIMENT = "no_trump_rotations_104enc_eta=0.004, 600k"
+EXPERIMENT = "no_trump_rotations_104enc_eta=0.004, 400k"
 
 
 
