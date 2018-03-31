@@ -447,7 +447,7 @@ class Autoencoder(Model):
         for i in range(0, len(self.weights)):
             l = [];
             for j in range(0, len(self.weights[i])):
-                l.append(self.create_layer(i, inp[j], j));
+                l.append(self.create_layer(i, inp[j], j, is_fixed=True));
             inp = [tf.concat(l, 1)];
             net.append(inp);
             
@@ -596,10 +596,16 @@ class Classifier(Model):
         loss = loss_f(self.output_placeholder, self.layer); 
         opt = tf.train.RMSPropOptimizer(learning_rate);
         optimizer = opt.minimize(loss);
-        self.autoencoder.session.run(tf.variables_initializer(self.weights + self.biases));
+        self.autoencoder.session.run(tf.variables_initializer(
+            self.weights +
+            self.biases + 
+            [item for items in self.autoencoder.fixed_biases for item in items] + 
+            [item for items in self.autoencoder.fixed_weights for item in items]
+            ));
         slot_vars = self.weights +  self.biases;
-        slot_vars.extend([item for items in self.autoencoder.biases for item in items]);
-        slot_vars.extend([item for items in self.autoencoder.weights for item in items]);
+        slot_vars.extend([item for items in self.autoencoder.fixed_weights for item in items]);
+        slot_vars.extend([item for items in self.autoencoder.fixed_biases for item in items]);
+
         self.autoencoder.session.run(Model.initialize_optimizer(opt, slot_vars));
         hist_summaries = [(self.autoencoder.weights[i], 'weights{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))];
         hist_summaries.extend([(self.autoencoder.biases[i], 'biases{0}'.format(i)) for i in range(0, len(self.autoencoder.weights))]);

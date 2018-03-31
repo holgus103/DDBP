@@ -14,7 +14,7 @@ TEST_NO_TRUMP = True
 TRAIN_NO_TRUMP = True
 BATCHES = 4
 PARTITION = 0.66
-SET_SIZE = 600000
+SET_SIZE = 600
 SECOND_LAYER = 39
 EXPERIMENT = "no_trump_altered_104enc_eta=0.002"
 
@@ -63,7 +63,7 @@ a = models.Autoencoder(models.Model.cross_entropy_loss, SECOND_LAYER);
 
 
 # pretrain each layer
-a.pretrain(0.001, 0, 200, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
+a.pretrain(0.001, 0, 200, data_batches, 0, -0.01, path + "{0}" , optimizer, 0.2, 15);
 
 # create classifier
 c = models.Classifier(a, [52, 13, 14]);
