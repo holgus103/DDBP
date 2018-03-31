@@ -169,7 +169,7 @@ class Autoencoder(Model):
         weights = [];
         fixed_weights = [];
         for i in range(0, 4):
-            weights.append(tf.Variable(tf.random_normal([52, 26]), trainable = True, name='v_W13_{0}'.format(i+1)));  
+            weights.append(tf.Variable(tf.random_normal([52, self.layer_counts[0]]), trainable = True, name='v_W13_{0}'.format(i+1)));  
             fixed_weights.append(tf.Variable(tf.identity(weights[i]), trainable = False, name='f_W13_{0}'.format(i+1)));  
         self.weights.append(weights);
         self.fixed_weights.append(fixed_weights)
@@ -182,7 +182,7 @@ class Autoencoder(Model):
         b  = [];
         b_fixed = []
         for i in range(0,4):
-            b.append(tf.Variable(tf.random_normal([26]), trainable = True, name='v_B13_{0}'.format(i+1)));
+            b.append(tf.Variable(tf.random_normal([self.layer_counts[0]]), trainable = True, name='v_B13_{0}'.format(i+1)));
             b_fixed.append(tf.Variable(tf.identity(b[i]), trainable = False, name='f_B13_{0}'.format(i+1)));
         self.biases.append(b);
         self.fixed_biases.append(b_fixed)
@@ -247,7 +247,7 @@ class Autoencoder(Model):
 
         return net; 
 
-    def __init__(self, loss):
+    def __init__(self, loss, second_layer):
         """
         Main class constructor
 
@@ -264,7 +264,7 @@ class Autoencoder(Model):
         """
         self.loss = loss;
         self.input_count = 208;
-        self.layer_counts = [26];
+        self.layer_counts = [second_layer];
         self.weights = [];   
         self.biases = [];
         self.out_biases = [];

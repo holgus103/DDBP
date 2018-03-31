@@ -15,6 +15,7 @@ TRAIN_NO_TRUMP = True
 BATCHES = 4
 PARTITION = 0.66
 SET_SIZE = 600000
+SECOND_LAYER = 39
 EXPERIMENT = "no_trump_altered_104enc_eta=0.002"
 
 
@@ -58,7 +59,7 @@ outputs_batches.append(outputs[(batch_count - 1) * batch_size : l]);
 print(len(data_batches[0]))
 # create autoencoder
 # a = models.Autoencoder(217, [197, 179, 162, 147], models.Model.cross_entropy_loss);
-a = models.Autoencoder(models.Model.cross_entropy_loss);
+a = models.Autoencoder(models.Model.cross_entropy_loss, SECOND_LAYER);
 
 
 # pretrain each layer
