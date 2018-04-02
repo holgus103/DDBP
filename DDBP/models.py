@@ -379,7 +379,7 @@ class Autoencoder(Model):
         self.session.run(Model.initialize_optimizer(opt, vars));
         loss_summary = tf.summary.scalar("loss", loss_function);
         summary_op = tf.summary.merge([loss_summary]);
-        writer = tf.summary.FileWriter(summary_path.format(i) + (ep > 0 and "ep{0}".format(ep) or "it{0}".format(it)) , graph=self.session.graph, flush_secs = 10000);
+        writer = tf.summary.FileWriter(summary_path.format(i) + (ep > 0 and "ep{0}".format(ep) or "it{0}".format(it)) , graph=self.session.graph, flush_secs = 100);
 
         if(delta >= 0):
             no_improvement_counter = 0;
