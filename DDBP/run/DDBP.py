@@ -15,8 +15,8 @@ TRAIN_NO_TRUMP = True
 BATCHES = 4
 PARTITION = 0.66
 SET_SIZE = 600000
-SECOND_LAYER = 26
-EXPERIMENT = "no_trump_altered__fixed_104enc_eta=0.002"
+SECOND_LAYER = 39
+EXPERIMENT = "no_trump_altered__fixed_156enc_eta=0.002"
 
 
 
@@ -32,7 +32,7 @@ path = "./summaries/{0}/".format(experiment_name);
 dp.initialize_random(experiment_name);
 
 # import data
-(data, outputs, test_data, test_outputs) = dp.read_file("./data/library", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
+(data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
 
 d_train = dp.get_distribution(data, outputs);
 d_test = dp.get_distribution(test_data, test_outputs);
