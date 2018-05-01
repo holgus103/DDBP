@@ -17,7 +17,7 @@ import pprint;
 
 """
 
-def parse(input, no_trump, trump):
+def parse(input, data, no_trump, trump):
     """
     Parse function used to process one line
 
@@ -25,6 +25,8 @@ def parse(input, no_trump, trump):
     ----------
     input : string
         A deal encoded in the format specified above
+    data : Dict
+        Dictionary Tricks, input
     no_trump : bool
         Boolean value indicating whether No Trump games are to be skipped or not
     trump : bool
@@ -53,25 +55,25 @@ def parse(input, no_trump, trump):
         'D' : 13, 
     }
     t = input.split(":");
-    data = [];
-    outputs = [];
     vals = t[0].split(" ");    
 
 
     b = (no_trump and 1 or 2) - 1 ;
     e = trump and 5 or 1;
 
+    res = [];
     for i in range(b*4,e*4):
         if(i % 2 == 1):
             continue;
         else:
             c = t[1][i];
-            arr = numpy.repeat(0, 14);
-            if c=="\n":
-                continue
-            arr[dict[c]] = 1;
-            outputs.append(arr);
-        # if c=="\n":
+            res.append(dict[c])
+        #     arr = numpy.repeat(0, 14);
+        #     if c=="\n":
+        #         continue
+        #     arr[dict[c]] = 1;
+        #     outputs.append(arr);
+        # if c=="\n":s
         #     continue
         # arr = dict[c] * 1.0 / 14.0 + 0.5/14.0
         # outputs.append(arr);
@@ -80,7 +82,7 @@ def parse(input, no_trump, trump):
     org_deals = [process_player(vals[i]) for i in range(0, 4)];
     #players = [[player[(i*13):((i+1):13)] for i in range(0, 4)] for player in deal]
     # return (deals, outputs);
-
+    count = 0;
     # no trump, spades, hearts, diamonds, clubs
     for suit in range(b, e):
         # south, east, north, west
@@ -94,10 +96,10 @@ def parse(input, no_trump, trump):
                     deals[k][13*(suit-1):13*suit] = spades;
             current = deals[(4-vist):(len(deals))] + deals[0:(4-vist)];
             #current = numpy.concatenate(deals);
+            if not(res[count] in data):
+                data[res[count]] = [];
 
-            data.append(numpy.concatenate(current));
-            
-    return (data, outputs); 
+            data[res[count]].append(numpy.concatenate(current));
 
     
 
@@ -170,16 +172,12 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True,
         Tuple of lists containing a set of generated inputs and a set of corresponding outputs (training and test data)
 
     """
-    def process(data_set, outputs_set, line, no_trump, trump):
-        data, outputs = parse(line, no_trump, trump);
-        data_set.append(data)
-        outputs_set.append(outputs)
+    def process(data, line, no_trump, trump):
+        parse(line, data, no_trump, trump);
 
     test_end = int(lines_count * split);
-    data_set = []
-    outputs_set = []
-    test_set = []
-    test_outputs_set = []
+    data = {}
+    test = {}
     line_number = 1
     lines = [];
     with open(path, "r") as file:
@@ -193,9 +191,9 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True,
                 if line_number % 100  == 0:
                     print("Reading line {0}".format(line_number));
                 if line_number < test_end:
-                    process(data_set, outputs_set, line, no_trump, trump);
+                    process(data, line, no_trump, trump);
                 else:
-                    process(test_set, test_outputs_set, line, no_trump_test, trump_test);
+                    process(test, line, no_trump_test, trump_test);
             #data_set = data_set + data;
             #outputs_set = outputs_set + outputs;
             line_number = line_number + 1
@@ -206,11 +204,11 @@ def read_file(path, lines_count, shuffle = False, no_trump = True, trump = True,
             if line_number % 100  == 0:
                 print("Reading line {0}".format(line_number));
             if line_number < test_end:
-                process(data_set, outputs_set, line, no_trump, trump);
+                process(data, line, no_trump, trump);
             else:
-                process(test_set, test_outputs_set, line, no_trump_test, trump_test);
+                process(test, line, no_trump_test, trump_test);
             line_number = line_number + 1;
-    return combine_data_sets(data_set, outputs_set) + combine_data_sets(test_set, test_outputs_set);
+    return (data, test)
 
 def combine_data_sets(data_sets, output_sets):
     """
