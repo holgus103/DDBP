@@ -15,8 +15,8 @@ TRAIN_NO_TRUMP = False
 BATCHES = 4
 PARTITION = 0.5
 SET_SIZE = 200000
-SECOND_LAYER = 39
-EXPERIMENT = "trump_altered_156enc_eta=0.004"
+SECOND_LAYER = 26
+EXPERIMENT = "trump_altered_104enc_eta=0.004_2"
 
 
 
