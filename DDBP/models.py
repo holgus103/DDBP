@@ -433,7 +433,7 @@ class Classifier(Model):
         i = len(counts) - 1
         self.weights.append(tf.Variable(tf.random_normal([prev, counts[i]])));
         self.biases.append(tf.Variable(tf.random_normal([counts[i]])));
-        self.layers.append(tf.nn.softmax(tf.matmul(input, self.weights[i]) + self.biases[i]));
+        self.layers.append(tf.nn.sigmoid(tf.matmul(input, self.weights[i]) + self.biases[i]));
         self.layer = self.layers[len(self.layers) - 1];
         self.output_placeholder = tf.placeholder("float", [None, counts[i]]);
         self.get_accuracy_tensors();
@@ -567,9 +567,9 @@ class Classifier(Model):
         (Tensor, Tensor, Tensor)
             Tuple containing all tensors hold accuracy values
         """
-        correct_prediction = tf.equal(tf.argmax(self.layer, 1), tf.argmax(self.output_placeholder, 1));
-        missed_by_one = tf.less_equal(tf.abs(tf.argmax(self.layer, 1) - tf.argmax(self.output_placeholder, 1)), 1);
-        missed_by_two = tf.less_equal(tf.abs(tf.argmax(self.layer, 1) - tf.argmax(self.output_placeholder, 1)), 2);
+        correct_prediction = tf.less_equal(tf.abs(self.layer - self.output_placeholder), 1/28.0);
+        missed_by_one = tf.less_equal(tf.abs(self.layer - self.output_placeholder), 3/28.0);
+        missed_by_two = tf.less_equal(tf.abs(self.layer - self.output_placeholder), 5/28.0);
 
         self.accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
         self.accuracy_missed_by_one = tf.reduce_mean(tf.cast(missed_by_one, "float"))
