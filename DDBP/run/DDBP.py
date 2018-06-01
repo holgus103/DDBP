@@ -16,7 +16,7 @@ BATCHES = 4
 PARTITION = 0.66
 SET_SIZE = 600000
 
-EXPERIMENT = "no_trump_rotations_104enc_eta=0.002_1out"
+EXPERIMENT = "no_trump_rotations_156enc_eta=0.002_1out"
 
 
 # main experiment code
@@ -57,11 +57,11 @@ data_batches.append(data[(batch_count - 1) * batch_size : l]);
 outputs_batches.append(outputs[(batch_count - 1) * batch_size : l]);
 print(len(data_batches[0]))
 # create autoencoder
-a = models.Autoencoder(208, [104], models.Model.cross_entropy_loss);
+a = models.Autoencoder(208, [156], models.Model.cross_entropy_loss);
 
 
 # pretrain each layer
-a.pretrain(0.001, 0, 200, data_batches, 0, 10, path + "{0}" , optimizer, 0.2, 15);
+a.pretrain(0.001, 0, 200, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
 
 # create classifier
 c = models.Classifier(a, [52, 13, 1]);
