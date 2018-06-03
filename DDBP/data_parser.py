@@ -66,15 +66,15 @@ def parse(input, no_trump, trump):
             continue;
         else:
             c = t[1][i];
-            arr = numpy.repeat(0, 14);
+            #arr = numpy.repeat(0, 14);
+            #if c=="\n":
+            #    continue
+            #arr[dict[c]] = 1;
+            #outputs.append(arr);
             if c=="\n":
                 continue
-            arr[dict[c]] = 1;
+            arr = numpy.array([dict[c] * 1.0 / 14.0 + 0.5/14.0]);
             outputs.append(arr);
-        # if c=="\n":
-        #     continue
-        # arr = dict[c] * 1.0 / 14.0 + 0.5/14.0
-        # outputs.append(arr);
 
     
     org_deals = [process_player(vals[i]) for i in range(0, 4)];
@@ -299,7 +299,9 @@ def get_distribution(data, outputs):
         res = numpy.repeat(0, 14);
         for i in range(0, len(data)):
             if data[i][suit] == 1:
-                c = outputs[i].argmax();
+                c = outputs[i][0];
+                c = c * 14;
+                c = int(c);
                 res[c] = res[c] + 1;
         final.append(res);
     return final;

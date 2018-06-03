@@ -15,9 +15,9 @@ TRAIN_NO_TRUMP = True
 BATCHES = 4
 PARTITION = 0.66
 SET_SIZE = 600000
-SECOND_LAYER = 39
+SECOND_LAYER = 26
 LEARNING_RATE = 0.002
-EXPERIMENT = "no_trump_altered_156enc_eta=0.002_2"
+EXPERIMENT = "no_trump_altered_104enc_eta=0.002_1out"
 
 
 
@@ -67,7 +67,7 @@ a = models.Autoencoder(models.Model.cross_entropy_loss, SECOND_LAYER);
 a.pretrain(0.001, 0, 200, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
 
 # create classifier
-c = models.Classifier(a, [52, 13, 14]);
+c = models.Classifier(a, [52, 13, 1]);
 # train whole network
 c.train(data_batches, outputs_batches, LEARNING_RATE, 15000, 0, path +"/finetuning", data, outputs, test_data, test_outputs, dp.suit_count_for_params(TRAIN_NO_TRUMP, TRAIN_TRUMP), dp.suit_count_for_params(TEST_NO_TRUMP, TEST_TRUMP), models.Model.mse_loss, 25, experiment_name);
 
