@@ -16,9 +16,9 @@ BATCHES = 4
 PARTITION = 0.5
 SET_SIZE = 200000
 LEARNING_RATE = 0.004
-LAYERS_SIZE = 104
+LAYERS_SIZE = 156
 
-EXPERIMENT = "trump_rotations_104enc_eta=0.004, 400k"
+EXPERIMENT = "trump_rotations_156enc_eta=0.004, 400k"
 
 
 # main experiment code
