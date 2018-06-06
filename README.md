@@ -36,17 +36,17 @@ Then checkout the commit corresponding to the desired experiment:
 | dedicated     | 156           | Yes    | No trump| 8f668eba9c178b1f4afacf01a4b531711587f209
 | dedicated     | 156           | Yes    | Trump   | b9b545f2cf940ce63f35aa0cfad69278d4cc9808
 | full          | 104           | No     | No trump| 8dc064ea6303057d53ceac12263376589c1d4f80
-| full          | 104           | No     | Trump   |
-| full          | 104           | Yes    | No Trump|   
-| full          | 104           | Yes    | Trump   |
+| full          | 104           | No     | Trump   | 24f63e4dabe9359f2cd3956cbdc6a9321d54b8e3
+| full          | 104           | Yes    | No Trump| 249ef898ebe47026ad07e1e9ef88843de022ba0c  
+| full          | 104           | Yes    | Trump   | 22d3874cd5c48dbd360268d1d67957bb6f724486
 | full          | 156           | No     | No trump| 83954aaa8ab0d4722465340c617103dacfb54da8
-| full          | 156           | No     | Trump   |
-| full          | 156           | Yes    | No trump|   
-| full          | 156           | Yes    | Trump   |
+| full          | 156           | No     | Trump   | 5cb485510f4e04bfc6bb3123a022bf5d2bfcb4bc
+| full          | 156           | Yes    | No trump| 1fbb59196c43208a428f7b624296b9b4e612fafd  
+| full          | 156           | Yes    | Trump   | 3b30f93a4f939df64c488214cbecbdae195af29d
 
 Then move to the directory DDBP/DDBP/run and execute the DDBP.py script
 
-    $ cd DDBP/DDBP/ru
+    $ cd DDBP/DDBP/run
     $ python3 DDBP.py
 
 ## References
