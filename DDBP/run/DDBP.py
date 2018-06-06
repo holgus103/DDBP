@@ -8,16 +8,16 @@ import pprint;
 
 
 # configure here
-TEST_TRUMP = True
-TRAIN_TRUMP = True
-TEST_NO_TRUMP = False
-TRAIN_NO_TRUMP = False
+TEST_TRUMP = False
+TRAIN_TRUMP = False
+TEST_NO_TRUMP = True
+TRAIN_NO_TRUMP = true
 BATCHES = 4
-PARTITION = 0.5
-SET_SIZE = 200000
-LEARNING_RATE = 0.004
-LAYER_SIZE = 156
-EXPERIMENT = "trump_rotations_fixed_156enc_eta=0.004,400k"
+PARTITION = 0.66
+SET_SIZE = 600000
+LEARNING_RATE = 0.002
+LAYER_SIZE = 104
+EXPERIMENT = "no_trump_rotations_fixed_104enc_eta=0.002,400k"
 
 
 
