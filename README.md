@@ -37,7 +37,7 @@ Then checkout the commit corresponding to the desired experiment:
 | dedicated     | 156           | Yes    | Trump   | b9b545f2cf940ce63f35aa0cfad69278d4cc9808
 | full          | 104           | No     | No trump| 8dc064ea6303057d53ceac12263376589c1d4f80
 | full          | 104           | No     | Trump   | 24f63e4dabe9359f2cd3956cbdc6a9321d54b8e3
-| full          | 104           | Yes    | No Trump| 249ef898ebe47026ad07e1e9ef88843de022ba0c  
+| full          | 104           | Yes    | No Trump| 71d82d06a73a5d07d777284932fb3f43b9570795  
 | full          | 104           | Yes    | Trump   | 22d3874cd5c48dbd360268d1d67957bb6f724486
 | full          | 156           | No     | No trump| 83954aaa8ab0d4722465340c617103dacfb54da8
 | full          | 156           | No     | Trump   | 5cb485510f4e04bfc6bb3123a022bf5d2bfcb4bc
