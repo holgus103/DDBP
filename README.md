@@ -41,7 +41,7 @@ Then checkout the commit corresponding to the desired experiment:
 | full          | 104           | Yes    | Trump   | 22d3874cd5c48dbd360268d1d67957bb6f724486
 | full          | 156           | No     | No trump| 83954aaa8ab0d4722465340c617103dacfb54da8
 | full          | 156           | No     | Trump   | 5cb485510f4e04bfc6bb3123a022bf5d2bfcb4bc
-| full          | 156           | Yes    | No trump| 1fbb59196c43208a428f7b624296b9b4e612fafd  
+| full          | 156           | Yes    | No trump| 74f897b469e7e0f7a8808cd365ca6476a51edae3  
 | full          | 156           | Yes    | Trump   | 3b30f93a4f939df64c488214cbecbdae195af29d
 
 Then move to the directory DDBP/DDBP/run and execute the DDBP.py script
