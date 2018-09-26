@@ -5,6 +5,7 @@ import random;
 import numpy;
 import sys;
 import pprint;
+import os;
 
 
 # configure here
@@ -14,10 +15,10 @@ TEST_NO_TRUMP = True
 TRAIN_NO_TRUMP = True
 BATCHES = 4
 PARTITION = 0.66
-SET_SIZE = 600000
-SECOND_LAYER = 39
+SET_SIZE = 600
+SECOND_LAYER = 26
 LEARNING_RATE = 0.002
-EXPERIMENT = "no_trump_altered_156enc_eta=0.002_2"
+EXPERIMENT = "no_trump_altered_104enc_eta=0.002_deep_comparison"
 
 
 
@@ -33,8 +34,16 @@ path = "./summaries/{0}/".format(experiment_name);
 dp.initialize_random(experiment_name);
 
 # import data
-(data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
+(data, outputs, test_data, test_outputs) = dp.read_file("./../data/sol100000.txt", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
+if(not os.path.exists("summaries")):
+    os.mkdir("summaries");
 
+if(not os.path.exists(path)):
+    os.mkdir(path)
+numpy.save(path + "train_data", data);
+numpy.save(path + "train_output", outputs);
+numpy.save(path + "test_data", test_data);
+numpy.save(path + "test_output", test_outputs);
 d_train = dp.get_distribution(data, outputs);
 d_test = dp.get_distribution(test_data, test_outputs);
 dp.save_distribution(path, d_train, d_test);
@@ -64,7 +73,7 @@ a = models.Autoencoder(models.Model.cross_entropy_loss, SECOND_LAYER);
 
 
 # pretrain each layer
-a.pretrain(0.001, 0, 200, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
+a.pretrain(0.001, 0, 200, data_batches, 0, 10, path + "{0}" , optimizer, 0.2, 15);
 
 # create classifier
 c = models.Classifier(a, [52, 13, 14]);
