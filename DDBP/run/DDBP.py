@@ -9,16 +9,16 @@ import os;
 
 
 # configure here
-TEST_TRUMP = False
-TRAIN_TRUMP = False
-TEST_NO_TRUMP = True
-TRAIN_NO_TRUMP = True
+TEST_TRUMP = True
+TRAIN_TRUMP = True
+TEST_NO_TRUMP = False
+TRAIN_NO_TRUMP = False
 BATCHES = 4
-PARTITION = 0.66
-SET_SIZE = 600
+PARTITION = 0.5
+SET_SIZE = 200000
 SECOND_LAYER = 26
-LEARNING_RATE = 0.002
-EXPERIMENT = "no_trump_altered_104enc_eta=0.002_deep_comparison"
+LEARNING_RATE = 0.004
+EXPERIMENT = "trump_altered_104enc_eta=0.004_deep_comparison"
 
 
 
@@ -34,7 +34,7 @@ path = "./summaries/{0}/".format(experiment_name);
 dp.initialize_random(experiment_name);
 
 # import data
-(data, outputs, test_data, test_outputs) = dp.read_file("./../data/sol100000.txt", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
+(data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
 if(not os.path.exists("summaries")):
     os.mkdir("summaries");
 
@@ -73,7 +73,7 @@ a = models.Autoencoder(models.Model.cross_entropy_loss, SECOND_LAYER);
 
 
 # pretrain each layer
-a.pretrain(0.001, 0, 200, data_batches, 0, 10, path + "{0}" , optimizer, 0.2, 15);
+a.pretrain(0.001, 0, 200, data_batches, 0, 0.01, path + "{0}" , optimizer, 0.2, 15);
 
 # create classifier
 c = models.Classifier(a, [52, 13, 14]);
