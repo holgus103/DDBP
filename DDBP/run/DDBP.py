@@ -5,20 +5,21 @@ import random;
 import numpy;
 import sys;
 import pprint;
+import os;
 
 
 # configure here
-TEST_TRUMP = True
-TRAIN_TRUMP = True
-TEST_NO_TRUMP = False
-TRAIN_NO_TRUMP = False
+TEST_TRUMP = False
+TRAIN_TRUMP = False
+TEST_NO_TRUMP = True
+TRAIN_NO_TRUMP = True
 BATCHES = 4
-PARTITION = 0.5
-SET_SIZE = 200000
-LEARNING_RATE = 0.004
-LAYERS_SIZE = 156
+PARTITION = 0.66
+SET_SIZE = 600000
+LEARNING_RATE = 0.002
+LAYER_SIZE = 156
 
-EXPERIMENT = "trump_rotations_156enc_eta=0.004, 400k"
+EXPERIMENT = "no_trump_rotations_156enc_eta=0.002_deep_comparison"
 
 
 # main experiment code
@@ -34,6 +35,15 @@ dp.initialize_random(experiment_name);
 
 # import data
 (data, outputs, test_data, test_outputs) = dp.read_file("./../data/library", SET_SIZE, True, TRAIN_NO_TRUMP, TRAIN_TRUMP, TEST_NO_TRUMP, TEST_TRUMP, PARTITION);
+if(not os.path.exists("summaries")):
+    os.mkdir("summaries");
+
+if(not os.path.exists(path)):
+    os.mkdir(path)
+numpy.save(path + "train_data", data);
+numpy.save(path + "train_output", outputs);
+numpy.save(path + "test_data", test_data);
+numpy.save(path + "test_output", test_outputs);
 
 d_train = dp.get_distribution(data, outputs);
 d_test = dp.get_distribution(test_data, test_outputs);

@@ -1,5 +1,6 @@
 import tensorflow as tf;
 import time;
+import numpy;
 
 class Model:
     """
@@ -527,6 +528,8 @@ class Classifier(Model):
                     current_val = self.test(test_data, test_output)[0];
                     print(current_val);
                     if it_counter % 1000 == 0:
+                        out = self.autoencoder.session.run([self.layer], feed_dict={self.input_placeholder: test_data, self.output_placeholder: test_output});
+                        numpy.save(path + "test_outputs at {0}".format(it_counter), out);
                         self.save_model(experiment_name + " at {0}".format(it_counter))
                     print("finetuning - it {0} - lval {1}".format(it_counter, lval));
                     writer.add_summary(summary, it_counter);
